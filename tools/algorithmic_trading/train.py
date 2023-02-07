@@ -95,8 +95,10 @@ def test_dqn():
                                                        test_environment=test_environment,
                                                        agent=agent,
                                                        device=device))
-
-    cfg.dump(osp.join(trainer.work_dir, osp.basename(args.config)))
+    if task_name.startswith("style_test"):
+        cfg.dump(osp.join(trainers[0].work_dir, osp.basename(args.config)))
+    else:
+        cfg.dump(osp.join(trainer.work_dir, osp.basename(args.config)))
 
     if task_name.startswith("train"):
         trainer.train_and_valid()
