@@ -11,6 +11,7 @@ from ..custom import AgentBase
 from trademaster.utils import get_attr
 import numpy as np
 import torch
+import torch.nn as nn
 
 
 class PPOtrainer:
@@ -65,7 +66,7 @@ class PPOtrainer:
 
 
 @AGENTS.register_module()
-class OrderExecutionPD(AgentBase):
+class OrderExecutionPD(nn.Module):
     def __init__(self, **kwargs):
         super(OrderExecutionPD, self).__init__()
 

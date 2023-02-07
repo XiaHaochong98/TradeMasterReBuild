@@ -14,9 +14,10 @@ import random
 import pandas as pd
 import numpy as np
 from torch.distributions import Categorical
+import torch.nn as nn
 
 @AGENTS.register_module()
-class PortfolioManagementInvestorImitator(AgentBase):
+class PortfolioManagementInvestorImitator(nn.Module):
     def __init__(self, **kwargs):
         super(PortfolioManagementInvestorImitator, self).__init__()
 

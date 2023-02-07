@@ -9,10 +9,11 @@ from ..custom import AgentBase
 from trademaster.utils import get_attr
 import torch
 import random
+import torch.nn as nn
 
 
 @AGENTS.register_module()
-class PortfolioManagementEIIE(AgentBase):
+class PortfolioManagementEIIE(nn.Module):
     def __init__(self, **kwargs):
         super(PortfolioManagementEIIE, self).__init__()
 

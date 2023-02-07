@@ -13,6 +13,7 @@ from torch.distributions import Normal
 import random
 import pandas as pd
 import numpy as np
+import torch.nn as nn
 
 def make_market_information(df, technical_indicator):
     #based on the information, calculate the average for technical_indicator to present the market average
@@ -109,7 +110,7 @@ def generate_rho(mean: torch.tensor, std: torch.tensor):
     return result
 
 @AGENTS.register_module()
-class PortfolioManagementDeepTrader(AgentBase):
+class PortfolioManagementDeepTrader(nn.Module):
     def __init__(self, **kwargs):
         super(PortfolioManagementDeepTrader, self).__init__()
 

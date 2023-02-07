@@ -10,10 +10,10 @@ from trademaster.utils import get_attr
 import numpy as np
 import torch
 from random import sample
-
+import torch.nn as nn
 
 @AGENTS.register_module()
-class OrderExecutionETEO(AgentBase):
+class OrderExecutionETEO(nn.Module):
     def __init__(self, **kwargs):
         super(OrderExecutionETEO, self).__init__()
 
