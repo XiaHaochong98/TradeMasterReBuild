@@ -108,9 +108,21 @@ class AlgorithmicTradingEnvironment(Environments):
             self.df.index.unique()) - self.forward_num_day - 1
         if self.terminal:
             tr, sharpe_ratio, vol, mdd, cr, sor = self.analysis_result()
+            # save metrics for report
+            # get the buy and hold profit
+            last_day = self.day + 1
+            data = self.df.iloc[last_day -
+                                self.backward_num_day:last_day, :]
+            last_close = data.iloc[-1, :].close
+            print('first_close is: ',self.first_close,' last close is: ',last_close)
+            buy_and_hold_profict=100*(last_close-self.first_close)/self.first_close
+            print('buy and hold profit is: ',buy_and_hold_profict,"%")
+
             stats = OrderedDict(
                 {
                     "Profit Margin": ["{:04f}%".format(tr * 100)],
+                    "Buy and Hold Profit": ["{:04f}%".format(buy_and_hold_profict)],
+                    "Excess Profit": ["{:04f}%".format(tr * 100 - buy_and_hold_profict)],
                     "Sharp Ratio": ["{:04f}".format(sharpe_ratio)],
                     "Volatility": ["{:04f}".format(vol)],
                     "Max Drawdown": ["{:04f}".format(mdd)],
@@ -120,15 +132,11 @@ class AlgorithmicTradingEnvironment(Environments):
             )
             table = print_metrics(stats)
             print(table)
-            #save metrics for report
-            # get the buy and hold profit
-            last_close = self.data.iloc[-1, :].close
-            print('first_close is: ',self.first_close,' last close is: ',last_close)
-            buy_and_hold_profict=100*(last_close-self.first_close)/self.first_close
-            print('buy and hold profit is: ',buy_and_hold_profict,"%")
             save_dict = OrderedDict(
                 {
                     "Profit Margin": tr * 100,
+                    "Buy and Hold Profit":buy_and_hold_profict,
+                    "Excess Profit": tr * 100-buy_and_hold_profict,
                     "Sharp Ratio": sharpe_ratio,
                     "Volatility": vol,
                     "Max Drawdown": mdd,
