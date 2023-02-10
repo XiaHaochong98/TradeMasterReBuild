@@ -127,7 +127,7 @@ class AlgorithmicTradingEnvironment(Environments):
                     "Sortino Ratio": sor,
                 }
             )
-            metric_save_path=osp.join(osp.dirname(self.df_path),'metric_'+self.task+'_'+self.task_index+'.pickle')
+            metric_save_path=osp.join(osp.dirname(self.df_path),'metric_'+str(self.task)+'_'+str(self.task_index)+'.pickle')
             with open(metric_save_path, 'wb') as handle:
                 pickle.dump(save_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
             print('metric result saved to '+metric_save_path)
