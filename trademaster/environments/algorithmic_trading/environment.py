@@ -96,6 +96,9 @@ class AlgorithmicTradingEnvironment(Environments):
         self.state = self.state + self.compound_memory[-1]
         self.state = np.array(self.state)
 
+        self.first_close = self.data.iloc[-1, :].close
+
+
         return self.state
 
     def step(self, action):
@@ -117,6 +120,11 @@ class AlgorithmicTradingEnvironment(Environments):
             table = print_metrics(stats)
             print(table)
             #save metrics for report
+            # get the buy and hold profit
+            last_close = self.data.iloc[-1, :].close
+            print('first_close is: ',self.first_close,' last close is: ',last_close)
+            buy_and_hold_profict=100*(last_close-self.first_close)/self.first_close
+            print('buy and hold profit is: ',buy_and_hold_profict,"%")
             save_dict = OrderedDict(
                 {
                     "Profit Margin": tr * 100,
