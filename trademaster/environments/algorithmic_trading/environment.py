@@ -114,9 +114,9 @@ class AlgorithmicTradingEnvironment(Environments):
             data = self.df.iloc[last_day -
                                 self.backward_num_day:last_day, :]
             last_close = data.iloc[-1, :].close
-            print('first_close is: ',self.first_close,' last close is: ',last_close)
+            # print('first_close is: ',self.first_close,' last close is: ',last_close)
             buy_and_hold_profict=100*(last_close-self.first_close)/self.first_close
-            print('buy and hold profit is: ',buy_and_hold_profict,"%")
+            # print('buy and hold profit is: ',buy_and_hold_profict,"%")
 
             stats = OrderedDict(
                 {
