@@ -12,6 +12,8 @@ from ..custom import Environments
 from ..builder import ENVIRONMENTS
 from gym import spaces
 from collections import OrderedDict
+import pickle
+import os.path as osp
 
 
 @ENVIRONMENTS.register_module()
@@ -21,6 +23,7 @@ class AlgorithmicTradingEnvironment(Environments):
 
         self.dataset = get_attr(kwargs, "dataset", None)
         self.task = get_attr(kwargs, "task", "train")
+        self.task_index = int(get_attr(kwargs, "task_index", "-1"))
 
         self.df_path = None
         if self.task.startswith("train"):
@@ -113,6 +116,21 @@ class AlgorithmicTradingEnvironment(Environments):
             )
             table = print_metrics(stats)
             print(table)
+            #save metrics for report
+            save_dict = OrderedDict(
+                {
+                    "Profit Margin": tr * 100,
+                    "Sharp Ratio": sharpe_ratio,
+                    "Volatility": vol,
+                    "Max Drawdown": mdd,
+                    "Calmar Ratio": cr,
+                    "Sortino Ratio": sor,
+                }
+            )
+            metric_save_path=osp.join(osp.dirname(self.df_path),'metric_'+self.task+'_'+self.task_index+'.pickle')
+            with open(metric_save_path, 'wb') as handle:
+                pickle.dump(save_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
+            print('metric result saved to '+metric_save_path)
             return self.state, self.reward, self.terminal, {
                 "volidality": self.var
             }
