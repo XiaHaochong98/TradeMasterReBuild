@@ -35,6 +35,7 @@ def test_dqn():
 
     cfg = Config.fromfile(args.config)
     task_name = args.task_name
+    test_style=args.test_style
 
     cfg = replace_cfg_vals(cfg)
     # update test style
@@ -54,6 +55,7 @@ def test_dqn():
         for i, path in enumerate(dataset.test_style_paths):
             test_style_environments.append(build_environment(cfg, default_args=dict(dataset=dataset, task="test_style",
                                                                                     style_test_path=path,
+                                                                                    test_style=test_style,
                                                                                     task_index=i)))
 
     action_dim = train_environment.action_space.n
