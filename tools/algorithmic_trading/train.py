@@ -58,19 +58,20 @@ def test_dqn():
                                                                                     test_style=test_style,
                                                                                     task_index=i)))
 
-    action_dim = train_environment.action_space.n
-    state_dim = train_environment.observation_space.shape[0]
+    action_dim = train_environment.action_dim
+    state_dim = train_environment.state_dim
 
     cfg.act.update(dict(action_dim=action_dim, state_dim=state_dim))
     act = build_net(cfg.act)
+    act_optimizer = build_optimizer(cfg, default_args=dict(params=act.parameters()))
     if cfg.cri:
         cfg.cri.update(dict(action_dim=action_dim, state_dim=state_dim))
         cri = build_net(cfg.cri)
+        cri_optimizer = build_optimizer(cfg, default_args=dict(params=cri.parameters()))
     else:
         cri = None
+        cri_optimizer = None
 
-    act_optimizer = build_optimizer(cfg, default_args=dict(params=act.parameters()))
-    cri_optimizer = None
     criterion = build_loss(cfg)
 
     agent = build_agent(cfg, default_args=dict(action_dim = action_dim,
@@ -97,13 +98,12 @@ def test_dqn():
                                                        test_environment=test_environment,
                                                        agent=agent,
                                                        device=device))
-    if task_name.startswith("style_test"):
-        cfg.dump(osp.join(trainers[0].work_dir, osp.basename(args.config)))
-    else:
-        cfg.dump(osp.join(trainer.work_dir, osp.basename(args.config)))
+
+    cfg.dump(osp.join(ROOT, cfg.work_dir, osp.basename(args.config)))
 
     if task_name.startswith("train"):
         trainer.train_and_valid()
+        trainer.test()
         print("train end")
     elif task_name.startswith("test"):
         trainer.test()
