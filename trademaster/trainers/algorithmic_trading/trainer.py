@@ -174,7 +174,7 @@ class AlgorithmicTradingTrainer(Trainer):
                 tensor_action = tensor_action.argmax(dim=1)
             action = tensor_action.detach().cpu().numpy()[
                 0]  # not need detach(), because using torch.no_grad() outside
-            print('action is: ',action,type(action))
+            # print('action is: ',action,type(action))
             state, reward, done, _ = self.test_environment.step(action)
             episode_reward_sum += reward
             if done:
