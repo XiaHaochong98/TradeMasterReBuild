@@ -165,9 +165,9 @@ class AlgorithmicTradingEnvironment(Environments):
             # self.actions_counter+=1
             # print('self.actions_counter ',self.actions_counter)
             buy_volume = action - self.max_volume
-            print('buy_volume is: ', buy_volume, type(buy_volume))
+            # print('buy_volume is: ', buy_volume, type(buy_volume))
             hold_volume = self.compound_memory[-1][1] + buy_volume
-            print('hold_volume is: ', hold_volume, type(hold_volume))
+            # print('hold_volume is: ', hold_volume, type(hold_volume))
             cash_variation_number = np.abs(hold_volume) - np.abs(
                 self.compound_memory[-1][1])
             if cash_variation_number < 0:

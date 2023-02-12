@@ -165,7 +165,7 @@ class AlgorithmicTradingTrainer(Trainer):
 
         print("Test Best Episode")
         state = self.test_environment.reset()
-        print('state: ',state)
+        # print('state: ',state)
         episode_reward_sum = 0
         while True:
             tensor_state = torch.as_tensor(state, dtype=torch.float32, device=self.device).unsqueeze(0)
