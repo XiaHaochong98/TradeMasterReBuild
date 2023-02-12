@@ -191,17 +191,17 @@ class AlgorithmicTradingTrainer(Trainer):
         df.to_csv(os.path.join(self.work_dir, "test_result.csv"), index=False)
         return daily_return
 
-    def test_with_customize_policy(self,policy,customize_actions_id):
+    def test_with_customize_policy(self,policy,customize_policy_id):
 
         state = self.test_environment.reset()
 
-        print(f"Test customize policy: {str(customize_actions_id)}")
+        print(f"Test customize policy: {str(customize_policy_id)}")
 
         episode_reward_sum = 0
 
         while True:
             tensor_state = torch.as_tensor(state, dtype=torch.float32, device=self.device).unsqueeze(0)
-            tensor_action = policy(tensor_state)
+            tensor_action = policy(tensor_state,self.test_environment)
             if self.if_discrete:
                 tensor_action = tensor_action.argmax(dim=1)
             action = tensor_action.detach().cpu().numpy()[
@@ -220,7 +220,7 @@ class AlgorithmicTradingTrainer(Trainer):
         df = pd.DataFrame()
         df["daily_return"] = daily_return
         df["total assets"] = assets
-        df.to_csv(os.path.join(self.work_dir, "test_result.csv"), index=False)
+        df.to_csv(os.path.join(self.work_dir, 'test_result_customize_policy_'+str(customize_policy_id)+'.csv'), index=False)
         return daily_return
 
     def test_with_customize_actions(self,customize_actions,customize_actions_id):
@@ -257,7 +257,7 @@ class AlgorithmicTradingTrainer(Trainer):
         df = pd.DataFrame()
         df["daily_return"] = daily_return
         df["total assets"] = assets
-        df.to_csv(os.path.join(self.work_dir, "test_result.csv"), index=False)
+        df.to_csv(os.path.join(self.work_dir, "test_result_customize_actions_id_"+str(customize_actions_id)+".csv"), index=False)
         return daily_return
     # def test_buy_and_hold(self):
     #

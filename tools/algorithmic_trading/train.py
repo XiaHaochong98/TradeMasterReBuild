@@ -109,9 +109,14 @@ def test_dqn():
         trainer.test()
         print("test end")
     elif task_name.startswith("style_test"):
+        def blind_bid(states,env):
+            return 2*env.max_volume
+
         daily_return_list = []
+        daily_return_list_blind_bid=[]
         for trainer in trainers:
             daily_return_list.extend(trainer.test())
+            daily_return_list_blind_bid.extend(trainer.test_with_customize_policy(blind_bid,'blind_bid'))
         print('win rate is: ', sum(r > 0 for r in daily_return_list) / len(daily_return_list))
         print("style test end")
 
