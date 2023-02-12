@@ -79,6 +79,7 @@ class AlgorithmicTradingEnvironment(Environments):
         self.state = np.array(self.state).reshape(-1).tolist()
         self.state = self.state + self.compound_memory[-1]
         self.state = np.array(self.state)
+        self.test_id='agent'
 
     def reset(self):
         # here is a little difference: we only have one asset
@@ -154,7 +155,7 @@ class AlgorithmicTradingEnvironment(Environments):
                     "Sortino Ratio": sor,
                 }
             )
-            metric_save_path=osp.join(osp.dirname(self.df_path),'metric_'+str(self.task)+'_'+str(self.test_style)+'_'+str(self.task_index)+'.pickle')
+            metric_save_path=osp.join(osp.dirname(self.df_path),'metric_'+str(self.task)+'_'+str(self.test_style)+'_'+str(self.task_index)+'_'+str(self.test_id)+'.pickle')
             with open(metric_save_path, 'wb') as handle:
                 pickle.dump(save_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
             print('metric result saved to '+metric_save_path)

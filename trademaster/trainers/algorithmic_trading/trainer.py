@@ -194,7 +194,7 @@ class AlgorithmicTradingTrainer(Trainer):
     def test_with_customize_policy(self,policy,customize_policy_id):
 
         state = self.test_environment.reset()
-
+        self.test_environment.test_id=customize_policy_id
         print(f"Test customize policy: {str(customize_policy_id)}")
 
         episode_reward_sum = 0
@@ -224,7 +224,7 @@ class AlgorithmicTradingTrainer(Trainer):
 
 
         print(f"Test customize policy: {str(customize_actions_id)}")
-
+        self.test_environment.test_id = customize_actions_id
         state = self.test_environment.reset()
 
         if len(customize_actions)!=self.test_environment.action_length:
