@@ -243,6 +243,7 @@ class AlgorithmicTradingTrainer(Trainer):
             print('action is: ',action,type(action))
             if action<0 or action>self.test_environment.action_dim-1:
                 raise ValueError('Action volume doesn\'t fit.')
+            action=np.int64(action)
             state, reward, done, _ = self.test_environment.step(action)
             episode_reward_sum += reward
             if action_index==self.test_environment.action_length+1:
