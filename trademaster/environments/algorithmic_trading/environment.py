@@ -106,8 +106,8 @@ class AlgorithmicTradingEnvironment(Environments):
         self.first_close = self.data.iloc[-1, :].close
         self.actions_length=len(
             self.df.index.unique()) - self.forward_num_day - 1-self.day
-        print('self.actions_length ',self.actions_length)
-        self.actions_counter=0
+        # print('self.actions_length ',self.actions_length)
+        # self.actions_counter=0
 
 
         return self.state
@@ -162,8 +162,8 @@ class AlgorithmicTradingEnvironment(Environments):
                 "volidality": self.var
             }
         else:
-            self.actions_counter+=1
-            print('self.actions_counter ',self.actions_counter)
+            # self.actions_counter+=1
+            # print('self.actions_counter ',self.actions_counter)
             buy_volume = action - self.max_volume
             print('buy_volume is: ', buy_volume, type(buy_volume))
             hold_volume = self.compound_memory[-1][1] + buy_volume
