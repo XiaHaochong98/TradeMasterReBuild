@@ -203,7 +203,7 @@ class AlgorithmicTradingTrainer(Trainer):
             tensor_state = torch.as_tensor(state, dtype=torch.float32, device=self.device).unsqueeze(0)
             action = policy(tensor_state,self.test_environment)
             action=np.int64(action)
-            print('action is: ',action,type(action))
+            # print('action is: ',action,type(action))
             state, reward, done, _ = self.test_environment.step(action)
             episode_reward_sum += reward
             if done:
@@ -237,7 +237,7 @@ class AlgorithmicTradingTrainer(Trainer):
         while True:
             action=customize_actions[action_index]
             action_index+=1
-            print('action is: ',action,type(action))
+            # print('action is: ',action,type(action))
             if action<0 or action>self.test_environment.action_dim-1:
                 raise ValueError('Action volume doesn\'t fit.')
             action=np.int64(action)
