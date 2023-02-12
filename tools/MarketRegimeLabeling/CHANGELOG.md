@@ -15,6 +15,7 @@ All notable changes to this the market dynamic labelling evaluation toolbox will
 - Traditional market dynamics labeling
 - Test on single agent
 - Evaluation report and its visualization
+- Test on customize policies 
  
 ### Changed
 

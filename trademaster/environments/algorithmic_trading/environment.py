@@ -63,10 +63,12 @@ class AlgorithmicTradingEnvironment(Environments):
         self.compound_memory = [[self.initial_amount, 0]]
         # the compound_memory's element consists of 2 parts: the cash and the number of bitcoin you have in hand
         self.portfolio_return_memory = [0]
+        self.buy_and_hold_portfolio_return_memory=[0]
         self.transaction_cost_memory = []
         self.terminal = False
         self.portfolio_value = self.initial_amount
         self.asset_memory = [self.initial_amount]
+        self.buy_and_hold_asset_memory = [self.initial_amount]
         self.day = self.backward_num_day
         self.data = self.df.iloc[self.day - self.backward_num_day:self.day, :]
         self.date_memory = [self.data.date.unique()[-1]]
@@ -84,6 +86,7 @@ class AlgorithmicTradingEnvironment(Environments):
         # for the information, it should calculate 2 additional things
         self.compound_memory = [[self.initial_amount, 0]]
         self.portfolio_return_memory = [0]
+        self.portfolio_return_memory_buy_and_hold = [0]
         self.transaction_cost_memory = []
         self.terminal = False
         self.portfolio_value = self.initial_amount
@@ -98,8 +101,13 @@ class AlgorithmicTradingEnvironment(Environments):
         self.state = np.array(self.state).reshape(-1).tolist()
         self.state = self.state + self.compound_memory[-1]
         self.state = np.array(self.state)
+        self.first_day_flag=True
 
         self.first_close = self.data.iloc[-1, :].close
+        self.actions_length=len(
+            self.df.index.unique()) - self.forward_num_day - 1-self.day
+        print('self.actions_length ',self.actions_length)
+        self.actions_counter=0
 
 
         return self.state
@@ -154,6 +162,8 @@ class AlgorithmicTradingEnvironment(Environments):
                 "volidality": self.var
             }
         else:
+            self.actions_counter+=1
+            print('self.actions_counter ',self.actions_counter)
             buy_volume = action - self.max_volume
             hold_volume = self.compound_memory[-1][1] + buy_volume
             cash_variation_number = np.abs(hold_volume) - np.abs(
@@ -211,6 +221,14 @@ class AlgorithmicTradingEnvironment(Environments):
                                                 (new_price - old_price))
             self.portfolio_value = compound[0] + compound[1] * (new_price)
             self.asset_memory.append(self.portfolio_value)
+            # if self.first_day_flag:
+            #     self.buy_and_hold_portfolio_return_memory.append(self.action_dim *
+            #                                                      (new_price - old_price))
+            #     self.buy_and_hold_asset_memory.append()
+            #     self.first_day_flag=False
+            # else:
+            #     self.buy_and_hold_portfolio_return_memory.append(0 *
+            #                                         (new_price - old_price))
             self.future_data = self.df.iloc[self.day - 1:self.day +
                                                          self.forward_num_day, :]
             self.date_memory.append(self.data.date.unique()[-1])
@@ -240,6 +258,19 @@ class AlgorithmicTradingEnvironment(Environments):
 
         return df_return
 
+    # def buy_and_hold_save_portfolio_return_memory(self):
+    #     # a record of return for each time stamp
+    #     date_list = self.date_memory
+    #     df_date = pd.DataFrame(date_list)
+    #     df_date.columns = ['date']
+    #
+    #     return_list = self.buy_and_hold_portfolio_return_memory
+    #     df_return = pd.DataFrame(return_list)
+    #     df_return.columns = ["daily_return"]
+    #     df_return.index = df_date.date
+    #
+    #     return df_return
+
     def analysis_result(self):
         # A simpler API for the environment to analysis itself when coming to terminal
         df_return = self.save_portfolio_return_memory()
@@ -249,6 +280,11 @@ class AlgorithmicTradingEnvironment(Environments):
         df = pd.DataFrame()
         df["daily_return"] = daily_return
         df["total assets"] = assets
+        # We calculate the Buy and Hold results
+        buy_and_hold_df_return=self.save_portfolio_return_buy_and_hold_memory()
+        buy_and_hold_daily_return = buy_and_hold_df_return.daily_return.values
+
+
         return self.evaualte(df)
 
     def save_asset_memory(self):
@@ -263,6 +299,19 @@ class AlgorithmicTradingEnvironment(Environments):
         df_value.index = df_date.date
 
         return df_value
+
+    # def buy_and_hold_save_asset_memory(self):
+    #     # a record of asset values for each time stamp
+    #     date_list = self.date_memory
+    #     df_date = pd.DataFrame(date_list)
+    #     df_date.columns = ['date']
+    #
+    #     assets_list = self.buy_and_hold_asset_memory
+    #     df_value = pd.DataFrame(assets_list)
+    #     df_value.columns = ["total assets"]
+    #     df_value.index = df_date.date
+    #
+    #     return df_value
 
     def evaualte(self, df):
         daily_return = df["daily_return"]
