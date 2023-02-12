@@ -118,6 +118,7 @@ def test_dqn():
             daily_return_list.extend(trainer.test())
             daily_return_list_blind_bid.extend(trainer.test_with_customize_policy(blind_bid,'blind_bid'))
         print('win rate is: ', sum(r > 0 for r in daily_return_list) / len(daily_return_list))
+        print('blind_bid win rate is: ', sum(r > 0 for r in daily_return_list_blind_bid) / len(daily_return_list_blind_bid))
         print("style test end")
 
 
