@@ -281,8 +281,8 @@ class AlgorithmicTradingEnvironment(Environments):
         df["daily_return"] = daily_return
         df["total assets"] = assets
         # We calculate the Buy and Hold results
-        buy_and_hold_df_return=self.save_portfolio_return_buy_and_hold_memory()
-        buy_and_hold_daily_return = buy_and_hold_df_return.daily_return.values
+        # buy_and_hold_df_return=self.save_portfolio_return_buy_and_hold_memory()
+        # buy_and_hold_daily_return = buy_and_hold_df_return.daily_return.values
 
 
         return self.evaualte(df)
