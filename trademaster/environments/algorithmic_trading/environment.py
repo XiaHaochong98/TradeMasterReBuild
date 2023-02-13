@@ -318,8 +318,8 @@ class AlgorithmicTradingEnvironment(Environments):
     #     return df_value
 
     def evaualte(self, df):
-        print(df,df.shape,len(df))
         daily_return = df["daily_return"]
+        print(df, df.shape, len(df),len(daily_return))
         neg_ret_lst = df[df["daily_return"] < 0]["daily_return"]
         tr = df["total assets"].values[-1] / (df["total assets"].values[0] + 1e-10) - 1
         sharpe_ratio = np.mean(daily_return) / (np.std(daily_return) * (len(df) ** 0.5) + 1e-10)
