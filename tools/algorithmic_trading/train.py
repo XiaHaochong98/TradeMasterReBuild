@@ -112,7 +112,7 @@ def test_dqn():
         def Blind_Bid(states,env):
             return 2*env.max_volume
         def Do_Nothing(states,env):
-            return 0
+            return env.max_volume
 
         daily_return_list = []
         daily_return_list_Blind_Bid=[]
