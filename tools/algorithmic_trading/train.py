@@ -109,16 +109,21 @@ def test_dqn():
         trainer.test()
         print("test end")
     elif task_name.startswith("style_test"):
-        def blind_bid(states,env):
+        def Blind_Bid(states,env):
             return 2*env.max_volume
+        def Do_Nothing(states,env):
+            return 0
 
         daily_return_list = []
-        daily_return_list_blind_bid=[]
+        daily_return_list_Blind_Bid=[]
+        daily_return_list_Do_Nothing=[]
         for trainer in trainers:
             daily_return_list.extend(trainer.test())
-            daily_return_list_blind_bid.extend(trainer.test_with_customize_policy(blind_bid,'blind_bid'))
+            daily_return_list_Blind_Bid.extend(trainer.test_with_customize_policy(Blind_Bid,'Blind_Bid'))
+            daily_return_list_Do_Nothing.extend(trainer.test_with_customize_policy(Do_Nothing,'Do_Nothing'))
         print('win rate is: ', sum(r > 0 for r in daily_return_list) / len(daily_return_list))
-        print('blind_bid win rate is: ', sum(r > 0 for r in daily_return_list_blind_bid) / len(daily_return_list_blind_bid))
+        print('blind_bid win rate is: ', sum(r > 0 for r in daily_return_list_Blind_Bid) / len(daily_return_list_Blind_Bid))
+        print('blind_bid win rate is: ', sum(r > 0 for r in daily_return_list_Do_Nothing) / len(daily_return_list_Do_Nothing))
         print("style test end")
 
 

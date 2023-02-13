@@ -1,3 +1,18 @@
+# Evaluation Toolbox
+
+## The PRIDE-Star
+
+### Baselines
+- Buy and Hold: This is and ideal policy where you spend all your cash on the first tick.
+- Blind Buy: Continues buy until the cash runs out.
+- Do Nothing: Do nothing
+
+### Score Calculation
+The score of the PRIDE-Star is calculated as described:
+- Do nothing metrics are used as score 0
+- Blind Buy metrics are used as score 50 (-50 if worse than Do Nothing)
+- The score of other agents are given based on the assumption that the scores are following a normal distribution (50,$\sqrt{50}$)
+
 # Market Regime Labeling
 
 ***
