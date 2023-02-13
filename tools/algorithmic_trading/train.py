@@ -121,9 +121,9 @@ def test_dqn():
             daily_return_list.extend(trainer.test())
             daily_return_list_Blind_Bid.extend(trainer.test_with_customize_policy(Blind_Bid,'Blind_Bid'))
             daily_return_list_Do_Nothing.extend(trainer.test_with_customize_policy(Do_Nothing,'Do_Nothing'))
-        radar_plot_path=osp.dirname(self.df_path),
-        'metric_' + str(self.task) + '_' + str(self.test_style) + '_' + str(id) + '_radar.png')
-        plot_radar_chart()
+        # radar_plot_path=osp.dirname(self.df_path),
+        # 'metric_' + str(self.task) + '_' + str(self.test_style) + '_' + str(id) + '_radar.png')
+        # plot_radar_chart()
         print('win rate is: ', sum(r > 0 for r in daily_return_list) / len(daily_return_list))
         print('blind_bid win rate is: ', sum(r > 0 for r in daily_return_list_Blind_Bid) / len(daily_return_list_Blind_Bid))
         print('blind_bid win rate is: ', sum(r > 0 for r in daily_return_list_Do_Nothing) / len(daily_return_list_Do_Nothing))
