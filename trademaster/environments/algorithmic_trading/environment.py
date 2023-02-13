@@ -143,19 +143,20 @@ class AlgorithmicTradingEnvironment(Environments):
             )
             table = print_metrics(stats)
             print(table)
+            df_return = self.save_portfolio_return_memory()
+            daily_return = df_return.daily_return.values
+            df_value = self.save_asset_memory()
+            assets = df_value["total assets"].values
             save_dict = OrderedDict(
                 {
                     "Profit Margin": tr * 100,
                     "Buy and Hold Profit":buy_and_hold_profict,
                     "Excess Profit": tr * 100-buy_and_hold_profict,
-                    "Sharp Ratio": sharpe_ratio,
-                    "Volatility": vol,
-                    "Max Drawdown": mdd,
-                    "Calmar Ratio": cr,
-                    "Sortino Ratio": sor,
+                    "daily_return_df": daily_return,
+                    "total_assets_df": assets
                 }
             )
-            metric_save_path=osp.join(osp.dirname(self.df_path),'metric_'+str(self.task)+'_'+str(self.test_style)+'_'+str(self.task_index)+'_'+str(self.test_id)+'.pickle')
+            metric_save_path=osp.join(osp.dirname(self.df_path),'metric_'+str(self.task)+'_'+str(self.test_style)+'_'+str(self.test_id)+'_'+str(self.task_index)+'.pickle')
             with open(metric_save_path, 'wb') as handle:
                 pickle.dump(save_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
             print('metric result saved to '+metric_save_path)
@@ -317,6 +318,7 @@ class AlgorithmicTradingEnvironment(Environments):
     #     return df_value
 
     def evaualte(self, df):
+        print(df,df.shape,len(df))
         daily_return = df["daily_return"]
         neg_ret_lst = df[df["daily_return"] < 0]["daily_return"]
         tr = df["total assets"].values[-1] / (df["total assets"].values[0] + 1e-10) - 1

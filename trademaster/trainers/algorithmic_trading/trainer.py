@@ -10,7 +10,9 @@ from trademaster.utils import get_attr, save_model, load_best_model, save_best_m
 import numpy as np
 import os
 import pandas as pd
-
+import os.path as osp
+import plotly.graph_objects as go
+import pickle
 
 @TRAINERS.register_module()
 class AlgorithmicTradingTrainer(Trainer):
@@ -256,33 +258,7 @@ class AlgorithmicTradingTrainer(Trainer):
         df["total assets"] = assets
         df.to_csv(os.path.join(self.work_dir, "test_result_customize_actions_id_"+str(customize_actions_id)+".csv"), index=False)
         return daily_return
-    # def test_buy_and_hold(self):
-    #
-    #     load_best_model(self.checkpoints_path, save=self.agent.get_save(), is_train=False)
-    #
-    #     print("Test Best Episode")
-    #     state = self.test_environment.reset()
-    #
-    #     episode_reward_sum = 0
-    #     while True:
-    #         tensor_state = torch.as_tensor(state, dtype=torch.float32, device=self.device).unsqueeze(0)
-    #         tensor_action = self.agent.act(tensor_state)
-    #         if self.if_discrete:
-    #             tensor_action = tensor_action.argmax(dim=1)
-    #         action = tensor_action.detach().cpu().numpy()[
-    #             0]  # not need detach(), because using torch.no_grad() outside
-    #         state, reward, done, _ = self.test_environment.step(action)
-    #         episode_reward_sum += reward
-    #         if done:
-    #             print("Test Best Episode Reward Sum: {:04f}".format(episode_reward_sum))
-    #             break
-    #
-    #     rewards = self.test_environment.save_asset_memory()
-    #     assets = rewards["total assets"].values
-    #     df_return = self.test_environment.save_portfolio_return_memory()
-    #     daily_return = df_return.daily_return.values
-    #     df = pd.DataFrame()
-    #     df["daily_return"] = daily_return
-    #     df["total assets"] = assets
-    #     df.to_csv(os.path.join(self.work_dir, "test_result.csv"), index=False)
-    #     return daily_return
+
+
+
+

@@ -8,7 +8,9 @@ from mmcv.utils import Registry
 from mmcv.utils import print_log
 import numpy as np
 import prettytable
-
+import plotly.graph_objects as go
+import os.path as osp
+import pickle
 def print_metrics(stats):
     table = prettytable.PrettyTable()
     for key, value in stats.items():
@@ -198,3 +200,64 @@ def replace_cfg_vals(ori_cfg):
         updated_cfg.model = updated_cfg.model_wrapper
         updated_cfg.pop('model_wrapper')
     return updated_cfg
+
+
+def create_radar_score_baseline(dir_name,metric_path):
+    # get 0-score metrics
+    # noted that for Mdd and Volatility, the lower, the better.
+    # So the 0-score metric for Mdd and Volatility here is actually 100-score
+    metric_path=metric_path + '_Do_Nothing'
+    zero_scores_files = [filename for filename in os.listdir(dir_name) if filename.startswith(metric_path)]
+    zero_scores_dicts =[]
+    for file in zero_scores_files:
+        with open(file, 'rb') as f:
+            zero_scores_dicts.append(pickle.load(f))
+    # get 50-score metrics
+    metric_path=metric_path + '_Blind_Bid'
+    fifty_scores_files = [filename for filename in os.listdir(dir_name) if filename.startswith(metric_path)]
+    fifty_scores_dicts =[]
+    for file in fifty_scores_files:
+        with open(file, 'rb') as f:
+            fifty_scores_dicts.append(pickle.load(f))
+    # We only assume the daily return follows normal distribution so to give a overall metric across multiple tests we will calculate the metrics here.
+    zero_Excess_Profit_list=[]
+    zero_daily_return_list=[]
+    zero_tr_list=[]
+    for zero_scores_dict in zero_scores_dicts:
+        zero_Excess_Profit_list.append(zero_scores_dict['Excess Profit'])
+        zero_tr_list.append(zero_scores_dict["total assets"].values[-1] / (zero_scores_dict["total assets"].values[0] + 1e-10) - 1)
+        zero_daily_return_list.append(zero_scores_dict["daily_return"])
+    zero_Excess_Profit=sum(zero_Excess_Profit_list) / len(zero_Excess_Profit_list)
+    zero_tr=sum(zero_tr_list) / len(zero_tr_list)
+    zero_daily_return_merged=np.concatenate(zero_daily_return_list, axis=0)
+    zero_sharpe_ratio=np.mean(zero_daily_return_merged) / (np.std(zero_daily_return_merged) * (len(zero_daily_return_merged) ** 0.5) + 1e-10)
+
+    return 0
+
+    # daily_return = df["daily_return"]
+    # neg_ret_lst = df[df["daily_return"] < 0]["daily_return"]
+    # tr = df["total assets"].values[-1] / (df["total assets"].values[0] + 1e-10) - 1
+    # sharpe_ratio = np.mean(daily_return) / (np.std(daily_return) * (len(df) ** 0.5) + 1e-10)
+    # vol = np.std(daily_return)
+    # mdd = max((max(df["total assets"]) - df["total assets"]) / (max(df["total assets"])) + 1e-10)
+    # cr = np.sum(daily_return) / (mdd + 1e-10)
+    # sor = np.sum(daily_return) / (np.std(neg_ret_lst) + 1e-10) / (np.sqrt(len(daily_return)) + 1e-10)
+
+def plot_radar_chart(data,id,radar_save_path):
+
+    fig = go.Figure(data=go.Scatterpolar(
+        r=data,
+        theta=['Excess Profit', 'Sharp Ratio', 'Volatility', 'Max Drawdown',
+               'Calmar Ratio','Sortino Ratio'],
+        fill='toself'
+    ))
+    fig.update_layout(
+        polar=dict(
+            radialaxis=dict(
+                visible=True
+            ),
+        ),
+        showlegend=False
+    )
+    # fig.show()
+    fig.write_image(radar_save_path)
