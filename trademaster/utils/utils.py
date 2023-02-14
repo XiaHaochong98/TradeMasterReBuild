@@ -228,8 +228,8 @@ def evaluate_metrics(scores_dicts):
     output_dict['mdd'] = sum(mdd_list) / len(mdd_list)
     output_dict['cr'] = sum(cr_list) / len(cr_list)
     neg_ret_lst = daily_return_merged[daily_return_merged < 0]
-    output_dict['sor'] = min(np.sum(daily_return_merged) / (np.std(neg_ret_lst) + 1e-10) / (
-                np.sqrt(len(daily_return_merged)) + 1e-10),100)
+    output_dict['sor'] = np.sum(daily_return_merged) / (np.nan_to_num(np.std(neg_ret_lst),0) + 1e-10) / (
+                np.sqrt(len(daily_return_merged)) + 1e-10)
     return output_dict
 
 def create_radar_score_baseline(dir_name,metric_path):
