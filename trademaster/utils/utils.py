@@ -307,6 +307,7 @@ def plot_radar_chart(data,id,radar_save_path):
     fig.update_layout(
         polar=dict(
             radialaxis=dict(
+                range=[-100,100],
                 visible=True
             ),
         ),
