@@ -276,6 +276,8 @@ def create_radar_score_baseline(dir_name,metric_path):
 
 def calculate_radar_score(dir_name,metric_path,agent_id,metrics_sigma_dict,zero_metrics):
     metric_path = metric_path + '_'+agent_id
+    print(metric_path)
+    print(s.listdir(dir_name))
     test_scores_files = [osp.join(dir_name,filename) for filename in os.listdir(dir_name) if filename.startswith(metric_path)]
     test_scores_dicts = []
     for file in test_scores_files:
