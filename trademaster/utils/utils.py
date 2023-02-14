@@ -319,7 +319,7 @@ def plot_radar_chart(data,id,radar_save_path):
     fig.add_trace(go.Barpolar(
     r=[Profitability,Risk_Control],
     theta=[90,270],
-    width=[Profitability,Risk_Control,],
+    width=[100+Profitability,100+Risk_Control,],
     marker_color=["#E4FF87", '#709BFF'],
     marker_line_color="black",
     marker_line_width=2,
