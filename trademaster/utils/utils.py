@@ -11,6 +11,7 @@ import prettytable
 import plotly.graph_objects as go
 import os.path as osp
 import pickle
+from scipy.stats import norm
 def print_metrics(stats):
     table = prettytable.PrettyTable()
     for key, value in stats.items():
@@ -201,11 +202,46 @@ def replace_cfg_vals(ori_cfg):
         updated_cfg.pop('model_wrapper')
     return updated_cfg
 
+def evaluate_metrics(scores_dicts):
+    Excess_Profit_list = []
+    daily_return_list = []
+    tr_list = []
+    mdd_list = []
+    cr_list = []
+    for scores_dict in scores_dicts:
+        Excess_Profit_list.append(scores_dict['Excess Profit'])
+        tr_list.append(
+            scores_dict["total assets"].values[-1] / (scores_dict["total assets"].values[0] + 1e-10) - 1)
+        daily_return_list.append(scores_dict["daily_return"])
+        mdd = max((max(scores_dict["total assets"]) - scores_dict["total assets"]) / (
+            max(scores_dict["total assets"])) + 1e-10)
+        mdd_list.append(mdd)
+        cr_list.append(np.sum(scores_dict["daily_return"]) / (mdd + 1e-10))
+    output_dict={}
+    output_dict['Excess_Profit'] = sum(Excess_Profit_list) / len(Excess_Profit_list)
+    output_dict['tr'] = sum(tr_list) / len(tr_list)
+    daily_return_merged = np.concatenate(daily_return_list, axis=0)
+    output_dict['sharpe_ratio'] = np.mean(daily_return_merged) / (
+                np.std(daily_return_merged) * (len(daily_return_merged) ** 0.5) + 1e-10)
+    output_dict['vol'] = np.std(daily_return_merged)
+    output_dict['mdd'] = sum(mdd_list) / len(mdd_list)
+    output_dict['cr'] = sum(cr_list) / len(cr_list)
+    neg_ret_lst = daily_return_merged[daily_return_merged < 0]
+    output_dict['sor'] = max(np.sum(daily_return_merged) / (np.std(neg_ret_lst) + 1e-10) / (
+                np.sqrt(len(daily_return_merged)) + 1e-10),100)
+    return output_dict
 
 def create_radar_score_baseline(dir_name,metric_path):
     # get 0-score metrics
     # noted that for Mdd and Volatility, the lower, the better.
     # So the 0-score metric for Mdd and Volatility here is actually 100-score
+
+    # We assume that the score of all policy range within  (-100,100)
+    # Do Nonthing policy will score 0
+    # the baseline policy(Blind Buy for now) should score 50(-50 if worse than Do Nothing)
+    # The distribution of the score of policies is a normal distribution
+    # The Do Nothing policy is 0.5 percentile and baseline policy should be the 0.75 percentile(0.675 sigma away from Do Nothing)
+    # Then we can score policies based on the conversion of sigma and metric value
     metric_path=metric_path + '_Do_Nothing'
     zero_scores_files = [filename for filename in os.listdir(dir_name) if filename.startswith(metric_path)]
     zero_scores_dicts =[]
@@ -220,28 +256,82 @@ def create_radar_score_baseline(dir_name,metric_path):
         with open(file, 'rb') as f:
             fifty_scores_dicts.append(pickle.load(f))
     # We only assume the daily return follows normal distribution so to give a overall metric across multiple tests we will calculate the metrics here.
-    zero_Excess_Profit_list=[]
-    zero_daily_return_list=[]
-    zero_tr_list=[]
-    for zero_scores_dict in zero_scores_dicts:
-        zero_Excess_Profit_list.append(zero_scores_dict['Excess Profit'])
-        zero_tr_list.append(zero_scores_dict["total assets"].values[-1] / (zero_scores_dict["total assets"].values[0] + 1e-10) - 1)
-        zero_daily_return_list.append(zero_scores_dict["daily_return"])
-    zero_Excess_Profit=sum(zero_Excess_Profit_list) / len(zero_Excess_Profit_list)
-    zero_tr=sum(zero_tr_list) / len(zero_tr_list)
-    zero_daily_return_merged=np.concatenate(zero_daily_return_list, axis=0)
-    zero_sharpe_ratio=np.mean(zero_daily_return_merged) / (np.std(zero_daily_return_merged) * (len(zero_daily_return_merged) ** 0.5) + 1e-10)
+    zero_metrics=evaluate_metrics(zero_scores_dicts)
+    fifty_metrics=evaluate_metrics(fifty_scores_dicts)
+    # zero_Excess_Profit_list=[]
+    # zero_daily_return_list=[]
+    # zero_tr_list=[]
+    # zero_mdd_list=[]
+    # zero_cr_list=[]
+    # for zero_scores_dict in zero_scores_dicts:
+    #     zero_Excess_Profit_list.append(zero_scores_dict['Excess Profit'])
+    #     zero_tr_list.append(zero_scores_dict["total assets"].values[-1] / (zero_scores_dict["total assets"].values[0] + 1e-10) - 1)
+    #     zero_daily_return_list.append(zero_scores_dict["daily_return"])
+    #     mdd=max((max(zero_scores_dict["total assets"]) - zero_scores_dict["total assets"]) / (max(zero_scores_dict["total assets"])) + 1e-10)
+    #     zero_mdd_list.append(mdd)
+    #     zero_cr_list.append(np.sum(zero_scores_dict["daily_return"]) / (mdd + 1e-10))
+    # zero_Excess_Profit=sum(zero_Excess_Profit_list) / len(zero_Excess_Profit_list)
+    # zero_tr=sum(zero_tr_list) / len(zero_tr_list)
+    # zero_daily_return_merged=np.concatenate(zero_daily_return_list, axis=0)
+    # zero_sharpe_ratio=np.mean(zero_daily_return_merged) / (np.std(zero_daily_return_merged) * (len(zero_daily_return_merged) ** 0.5) + 1e-10)
+    # zero_vol=np.std(zero_daily_return_merged)
+    # zero_mdd=sum(zero_mdd_list)/ len(zero_mdd_list)
+    # zero_cr=sum(zero_cr_list)/len(zero_cr_list)
+    # zero_neg_ret_lst=zero_daily_return_merged[zero_daily_return_merged<0]
+    # zero_sor = np.sum(zero_daily_return_merged) / (np.std(zero_neg_ret_lst) + 1e-10) / (np.sqrt(len(zero_daily_return_merged)) + 1e-10)
 
-    return 0
+    # fifty_Excess_Profit_list=[]
+    # fifty_daily_return_list=[]
+    # fifty_tr_list=[]
+    # fifty_mdd_list=[]
+    # fifty_cr_list=[]
+    # for fifty_scores_dict in fifty_scores_dicts:
+    #     fifty_Excess_Profit_list.append(fifty_scores_dict['Excess Profit'])
+    #     fifty_tr_list.append(fifty_scores_dict["total assets"].values[-1] / (fifty_scores_dict["total assets"].values[0] + 1e-10) - 1)
+    #     fifty_daily_return_list.append(fifty_scores_dict["daily_return"])
+    #     mdd=max((max(fifty_scores_dict["total assets"]) - fifty_scores_dict["total assets"]) / (max(fifty_scores_dict["total assets"])) + 1e-10)
+    #     fifty_mdd_list.append(mdd)
+    #     fifty_cr_list.append(np.sum(fifty_scores_dict["daily_return"]) / (mdd + 1e-10))
+    # fifty_Excess_Profit=sum(fifty_Excess_Profit_list) / len(fifty_Excess_Profit_list)
+    # fifty_tr=sum(fifty_tr_list) / len(fifty_tr_list)
+    # fifty_daily_return_merged=np.concatenate(fifty_daily_return_list, axis=0)
+    # fifty_sharpe_ratio=np.mean(fifty_daily_return_merged) / (np.std(fifty_daily_return_merged) * (len(fifty_daily_return_merged) ** 0.5) + 1e-10)
+    # fifty_vol=np.std(fifty_daily_return_merged)
+    # fifty_mdd=sum(fifty_mdd_list)/ len(fifty_mdd_list)
+    # fifty_cr=sum(fifty_cr_list)/len(fifty_cr_list)
+    # fifty_neg_ret_lst=fifty_daily_return_merged[fifty_daily_return_merged<0]
+    # fifty_sor = np.sum(fifty_daily_return_merged) / (np.std(fifty_neg_ret_lst) + 1e-10) / (np.sqrt(len(fifty_daily_return_merged)) + 1e-10)
 
-    # daily_return = df["daily_return"]
-    # neg_ret_lst = df[df["daily_return"] < 0]["daily_return"]
-    # tr = df["total assets"].values[-1] / (df["total assets"].values[0] + 1e-10) - 1
-    # sharpe_ratio = np.mean(daily_return) / (np.std(daily_return) * (len(df) ** 0.5) + 1e-10)
-    # vol = np.std(daily_return)
-    # mdd = max((max(df["total assets"]) - df["total assets"]) / (max(df["total assets"])) + 1e-10)
-    # cr = np.sum(daily_return) / (mdd + 1e-10)
-    # sor = np.sum(daily_return) / (np.std(neg_ret_lst) + 1e-10) / (np.sqrt(len(daily_return)) + 1e-10)
+    metrics_sigma_dict={}
+    metrics_sigma_dict['Excess_Profit']=abs(zero_metrics['Excess_Profit']-fifty_metrics['Excess_Profit'])/0.675
+    metrics_sigma_dict['tr']=abs(zero_metrics['tr']-fifty_metrics['tr'])/0.675
+    metrics_sigma_dict['sharpe_ratio']=abs(zero_metrics['sharpe_ratio']-fifty_metrics['sharpe_ratio'])/0.675
+    # vol and mdd for Do_Nothing is score 100(3 sigma)
+    metrics_sigma_dict['vol']=abs(zero_metrics['vol']-fifty_metrics['vol'])/(3-0.675)
+    metrics_sigma_dict['mdd']=abs(zero_metrics['mdd']-fifty_metrics['mdd'])/(3-0.675)
+    metrics_sigma_dict['cr']=abs(zero_metrics['cr']-fifty_metrics['cr'])/0.675
+    metrics_sigma_dict['sor']=abs(zero_metrics['sor']-fifty_metrics['sor'])/0.675
+    return metrics_sigma_dict,zero_metrics
+
+
+def calculate_radar_score(dir_name,metric_path,agent_id,metrics_sigma_dict,zero_metrics):
+    metric_path = metric_path + '_'+agent_id
+    test_scores_files = [filename for filename in os.listdir(dir_name) if filename.startswith(metric_path)]
+    test_scores_dicts = []
+    for file in test_scores_files:
+        with open(file, 'rb') as f:
+            test_scores_dicts.append(pickle.load(f))
+    test_metrics=evaluate_metrics(test_scores_dicts)
+    #turn metrics to sigma
+    profit_metric_names=['Excess_Profit','tr','sharpe_ratio','cr','sor']
+    risk_metric_names = ['vol', 'mdd']
+    test_metrics_scores_dict={}
+    for metric_name in profit_metric_names:
+        test_metrics_scores_dict[metric_name]=norm.cdf((test_metrics[metric_name]-zero_metrics[metric_name])/metrics_sigma_dict[metric_name])*200-100
+    for metric_name in risk_metric_names:
+        test_metrics_scores_dict[metric_name] = norm.cdf(
+           3-(test_metrics[metric_name] - zero_metrics[metric_name]) / metrics_sigma_dict[metric_name]) * 200 - 100
+    return test_metrics_scores_dict
 
 def plot_radar_chart(data,id,radar_save_path):
 
@@ -260,4 +350,6 @@ def plot_radar_chart(data,id,radar_save_path):
         showlegend=False
     )
     # fig.show()
+    radar_save_path+=id+'.png'
+    print('Radar plot printed to:',radar_save_path)
     fig.write_image(radar_save_path)

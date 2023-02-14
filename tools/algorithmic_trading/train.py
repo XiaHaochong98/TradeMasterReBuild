@@ -11,7 +11,7 @@ import torch
 import argparse
 import os.path as osp
 from mmcv import Config
-from trademaster.utils import replace_cfg_vals, plot_radar_chart
+from trademaster.utils import replace_cfg_vals,create_radar_score_baseline, calculate_radar_score, plot_radar_chart
 from trademaster.nets.builder import build_net
 from trademaster.environments.builder import build_environment
 from trademaster.datasets.builder import build_dataset
@@ -121,9 +121,13 @@ def test_dqn():
             daily_return_list.extend(trainer.test())
             daily_return_list_Blind_Bid.extend(trainer.test_with_customize_policy(Blind_Bid,'Blind_Bid'))
             daily_return_list_Do_Nothing.extend(trainer.test_with_customize_policy(Do_Nothing,'Do_Nothing'))
-        # radar_plot_path=osp.dirname(self.df_path),
+            dir_name=osp.dirname(trainer.df_path)
+            metric_path='metric_' + str(trainer.task) + '_' + str(trainer.test_style)
+        metrics_sigma_dict,zero_metrics=create_radar_score_baseline(dir_name,metric_path)
+        test_metrics_scores_dict = calculate_radar_score(dir_name,metric_path,'agent_'+str(test_style),metrics_sigma_dict,zero_metrics)
+        radar_plot_path=dir_name
         # 'metric_' + str(self.task) + '_' + str(self.test_style) + '_' + str(id) + '_radar.png')
-        # plot_radar_chart()
+        plot_radar_chart(test_metrics_scores_dict,'agent',radar_plot_path)
         print('win rate is: ', sum(r > 0 for r in daily_return_list) / len(daily_return_list))
         print('blind_bid win rate is: ', sum(r > 0 for r in daily_return_list_Blind_Bid) / len(daily_return_list_Blind_Bid))
         print('blind_bid win rate is: ', sum(r > 0 for r in daily_return_list_Do_Nothing) / len(daily_return_list_Do_Nothing))
