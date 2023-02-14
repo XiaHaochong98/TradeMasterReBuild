@@ -210,7 +210,7 @@ def evaluate_metrics(scores_dicts):
     cr_list = []
     for scores_dict in scores_dicts:
         Excess_Profit_list.append(scores_dict['Excess Profit'])
-        print('scores_dict["total_assets"] ',scores_dict["total_assets"].shape,scores_dict["total_assets"][-1],scores_dict["total_assets"][0])
+        # print('scores_dict["total_assets"] ',scores_dict["total_assets"].shape,scores_dict["total_assets"][-1],scores_dict["total_assets"][0])
         tr_list.append(
             scores_dict["total_assets"][-1] / (scores_dict["total_assets"][0] + 1e-10) - 1)
         daily_return_list.append(scores_dict["daily_return"])
@@ -260,7 +260,7 @@ def create_radar_score_baseline(dir_name,metric_path):
     zero_metrics=evaluate_metrics(zero_scores_dicts)
     # print('fifty_scores_dicts: ',fifty_scores_dicts)
     fifty_metrics=evaluate_metrics(fifty_scores_dicts)
-    print(zero_metrics,fifty_metrics)
+    # print(zero_metrics,fifty_metrics)
 
     metrics_sigma_dict={}
     metrics_sigma_dict['Excess_Profit']=abs(zero_metrics['Excess_Profit']-fifty_metrics['Excess_Profit'])/0.675
