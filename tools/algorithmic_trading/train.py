@@ -124,7 +124,7 @@ def test_dqn():
             dir_name=osp.dirname(trainer.test_environment.df_path)
             metric_path='metric_' + str(trainer.test_environment.task) + '_' + str(trainer.test_environment.test_style)
         metrics_sigma_dict,zero_metrics=create_radar_score_baseline(dir_name,metric_path)
-        test_metrics_scores_dict = calculate_radar_score(dir_name,metric_path,'agent_'+str(test_style),metrics_sigma_dict,zero_metrics)
+        test_metrics_scores_dict = calculate_radar_score(dir_name,metric_path,'agent',metrics_sigma_dict,zero_metrics)
         radar_plot_path=dir_name
         # 'metric_' + str(self.task) + '_' + str(self.test_style) + '_' + str(id) + '_radar.png')
         plot_radar_chart(test_metrics_scores_dict,str(test_style)+'_agent',radar_plot_path)
