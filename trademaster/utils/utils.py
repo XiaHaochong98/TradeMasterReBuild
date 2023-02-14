@@ -294,18 +294,31 @@ def calculate_radar_score(dir_name,metric_path,agent_id,metrics_sigma_dict,zero_
     for metric_name in risk_metric_names:
         test_metrics_scores_dict[metric_name] = norm.cdf(
            3-(test_metrics[metric_name] - zero_metrics[metric_name]) / metrics_sigma_dict[metric_name]) * 200-100
+    test_metrics_scores_dict["Profitability"] = (test_metrics_scores_dict["tr"] + test_metrics_scores_dict["sharpe_ratio"] + test_metrics_scores_dict["cr"] + test_metrics_scores_dict["sor"]) / 4
+    test_metrics_scores_dict["Risk Control"] = (test_metrics_scores_dict["mdd"] + test_metrics_scores_dict["vol"]) / 2
     return test_metrics_scores_dict
 
 def plot_radar_chart(data,id,radar_save_path):
-    data_list=[]
-    for metric in ['Excess_Profit','sharpe_ratio','vol','mdd','cr','sor']:
-        data_list.append(data[metric])
+    data_list_profit=[]
+    data_list_risk=[]
+    for metric in ['Excess_Profit','sharpe_ratio','cr','sor']:
+        data_list_profit.append(data[metric])
+    for metric in ['vol','mdd']:
+        data_list_profit.append(data[metric])
 
-    fig = go.Figure(data=go.Scatterpolar(
-        r=data_list,
-        theta=['Excess Profit', 'Sharp Ratio', 'Volatility', 'Max Drawdown',
+    fig = go.Figure()
+    fig.add_trace(go.Scatterpolar(
+        r=data_list_profit,
+        theta=['Excess Profit', 'Sharp Ratio',
                'Calmar Ratio','Sortino Ratio'],
-        fill='toself'
+        fill='toself',
+        line_color='peru'
+    ))
+    fig.add_trace(go.Scatterpolar(
+        r=data_list_risk,
+        theta=['Volatility', 'Max Drawdown'],
+        fill='toself',
+        line_color='deepskyblue'
     ))
     fig.update_layout(
         polar=dict(
@@ -320,3 +333,5 @@ def plot_radar_chart(data,id,radar_save_path):
     radar_save_path+='_'+id+'.png'
     print('Radar plot printed to:',radar_save_path)
     fig.write_image(radar_save_path)
+
+
