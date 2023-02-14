@@ -329,8 +329,8 @@ def plot_radar_chart(data,id,radar_save_path):
                 range=[-110,110],
                 visible=True
             ),
+            angularaxis=dict(showticklabels=False, ticks='')
         ),
-        angularaxis=dict(showticklabels=False, ticks=''),
         showlegend=False
     )
     # fig.show()
