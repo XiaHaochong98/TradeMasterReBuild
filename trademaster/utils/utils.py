@@ -294,9 +294,12 @@ def calculate_radar_score(dir_name,metric_path,agent_id,metrics_sigma_dict,zero_
     return test_metrics_scores_dict
 
 def plot_radar_chart(data,id,radar_save_path):
+    data_list=[]
+    for metric in ['Excess_Profit','sharpe_ratio','vol','mdd','cr','sor']:
+        data_list.append(data[metric])
 
     fig = go.Figure(data=go.Scatterpolar(
-        r=data,
+        r=data_list,
         theta=['Excess Profit', 'Sharp Ratio', 'Volatility', 'Max Drawdown',
                'Calmar Ratio','Sortino Ratio'],
         fill='toself'
