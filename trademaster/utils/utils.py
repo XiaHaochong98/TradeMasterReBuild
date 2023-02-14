@@ -315,14 +315,23 @@ def plot_radar_chart(data,id,radar_save_path):
         line_color='peru'
     ))
     fig.add_trace(go.Barpolar(
-    r=[sum(data_list_profit)/len(data_list_profit),sum(data_list_risk)/len(data_list_risk)],
-    theta=[90,270],
-    width=[60,30,],
-    marker_color=["#E4FF87", '#709BFF'],
-    marker_line_color="black",
-    marker_line_width=2,
-    opacity=0.8
-))
+        r=[3.5, 1.5, 2.5, 4.5, 4.5, 4, 3],
+        theta=[65, 15, 210, 110, 312.5, 180, 270],
+        width=[20, 15, 10, 20, 15, 30, 15, ],
+        marker_color=["#E4FF87", '#709BFF', '#709BFF', '#FFAA70', '#FFAA70', '#FFDF70', '#B6FFB4'],
+        marker_line_color="black",
+        marker_line_width=2,
+        opacity=0.8
+    ))
+#     fig.add_trace(go.Barpolar(
+#     r=[sum(data_list_profit)/len(data_list_profit),sum(data_list_risk)/len(data_list_risk)],
+#     theta=[90,270],
+#     width=[60,30,],
+#     marker_color=["#E4FF87", '#709BFF'],
+#     marker_line_color="black",
+#     marker_line_width=2,
+#     opacity=0.8
+# ))
     fig.update_layout(
         polar=dict(
             radialaxis=dict(
