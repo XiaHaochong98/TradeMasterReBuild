@@ -210,7 +210,7 @@ def evaluate_metrics(scores_dicts):
     cr_list = []
     for scores_dict in scores_dicts:
         Excess_Profit_list.append(scores_dict['Excess Profit'])
-        print('scores_dict["total_assets"] ',scores_dict["total_assets"].shape)
+        print('scores_dict["total_assets"] ',scores_dict["total_assets"].shape,scores_dict["total_assets"][-1],scores_dict["total_assets"][0])
         tr_list.append(
             scores_dict["total_assets"][-1] / (scores_dict["total_assets"][0] + 1e-10) - 1)
         daily_return_list.append(scores_dict["daily_return"])
@@ -258,50 +258,8 @@ def create_radar_score_baseline(dir_name,metric_path):
             fifty_scores_dicts.append(pickle.load(f))
     # We only assume the daily return follows normal distribution so to give a overall metric across multiple tests we will calculate the metrics here.
     zero_metrics=evaluate_metrics(zero_scores_dicts)
+    print('fifty_scores_dicts: ',fifty_scores_dicts)
     fifty_metrics=evaluate_metrics(fifty_scores_dicts)
-    # zero_Excess_Profit_list=[]
-    # zero_daily_return_list=[]
-    # zero_tr_list=[]
-    # zero_mdd_list=[]
-    # zero_cr_list=[]
-    # for zero_scores_dict in zero_scores_dicts:
-    #     zero_Excess_Profit_list.append(zero_scores_dict['Excess Profit'])
-    #     zero_tr_list.append(zero_scores_dict["total assets"].values[-1] / (zero_scores_dict["total assets"].values[0] + 1e-10) - 1)
-    #     zero_daily_return_list.append(zero_scores_dict["daily_return"])
-    #     mdd=max((max(zero_scores_dict["total assets"]) - zero_scores_dict["total assets"]) / (max(zero_scores_dict["total assets"])) + 1e-10)
-    #     zero_mdd_list.append(mdd)
-    #     zero_cr_list.append(np.sum(zero_scores_dict["daily_return"]) / (mdd + 1e-10))
-    # zero_Excess_Profit=sum(zero_Excess_Profit_list) / len(zero_Excess_Profit_list)
-    # zero_tr=sum(zero_tr_list) / len(zero_tr_list)
-    # zero_daily_return_merged=np.concatenate(zero_daily_return_list, axis=0)
-    # zero_sharpe_ratio=np.mean(zero_daily_return_merged) / (np.std(zero_daily_return_merged) * (len(zero_daily_return_merged) ** 0.5) + 1e-10)
-    # zero_vol=np.std(zero_daily_return_merged)
-    # zero_mdd=sum(zero_mdd_list)/ len(zero_mdd_list)
-    # zero_cr=sum(zero_cr_list)/len(zero_cr_list)
-    # zero_neg_ret_lst=zero_daily_return_merged[zero_daily_return_merged<0]
-    # zero_sor = np.sum(zero_daily_return_merged) / (np.std(zero_neg_ret_lst) + 1e-10) / (np.sqrt(len(zero_daily_return_merged)) + 1e-10)
-
-    # fifty_Excess_Profit_list=[]
-    # fifty_daily_return_list=[]
-    # fifty_tr_list=[]
-    # fifty_mdd_list=[]
-    # fifty_cr_list=[]
-    # for fifty_scores_dict in fifty_scores_dicts:
-    #     fifty_Excess_Profit_list.append(fifty_scores_dict['Excess Profit'])
-    #     fifty_tr_list.append(fifty_scores_dict["total assets"].values[-1] / (fifty_scores_dict["total assets"].values[0] + 1e-10) - 1)
-    #     fifty_daily_return_list.append(fifty_scores_dict["daily_return"])
-    #     mdd=max((max(fifty_scores_dict["total assets"]) - fifty_scores_dict["total assets"]) / (max(fifty_scores_dict["total assets"])) + 1e-10)
-    #     fifty_mdd_list.append(mdd)
-    #     fifty_cr_list.append(np.sum(fifty_scores_dict["daily_return"]) / (mdd + 1e-10))
-    # fifty_Excess_Profit=sum(fifty_Excess_Profit_list) / len(fifty_Excess_Profit_list)
-    # fifty_tr=sum(fifty_tr_list) / len(fifty_tr_list)
-    # fifty_daily_return_merged=np.concatenate(fifty_daily_return_list, axis=0)
-    # fifty_sharpe_ratio=np.mean(fifty_daily_return_merged) / (np.std(fifty_daily_return_merged) * (len(fifty_daily_return_merged) ** 0.5) + 1e-10)
-    # fifty_vol=np.std(fifty_daily_return_merged)
-    # fifty_mdd=sum(fifty_mdd_list)/ len(fifty_mdd_list)
-    # fifty_cr=sum(fifty_cr_list)/len(fifty_cr_list)
-    # fifty_neg_ret_lst=fifty_daily_return_merged[fifty_daily_return_merged<0]
-    # fifty_sor = np.sum(fifty_daily_return_merged) / (np.std(fifty_neg_ret_lst) + 1e-10) / (np.sqrt(len(fifty_daily_return_merged)) + 1e-10)
 
     metrics_sigma_dict={}
     metrics_sigma_dict['Excess_Profit']=abs(zero_metrics['Excess_Profit']-fifty_metrics['Excess_Profit'])/0.675
