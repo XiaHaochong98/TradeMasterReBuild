@@ -305,7 +305,8 @@ def plot_radar_chart(data,id,radar_save_path):
         data_list_profit.append(data[metric])
     for metric in ['vol','mdd']:
         data_list_risk.append(data[metric])
-
+    Risk_Control=sum(data_list_risk)/len(data_list_risk)
+    Profitability=sum(data_list_profit)/len(data_list_profit)
     fig = go.Figure()
     # fig.add_trace(go.Scatterpolar(
     #     r=data_list_profit+data_list_risk,
@@ -316,9 +317,9 @@ def plot_radar_chart(data,id,radar_save_path):
     # ))
 
     fig.add_trace(go.Barpolar(
-    r=[sum(data_list_profit)/len(data_list_profit),sum(data_list_risk)/len(data_list_risk)],
+    r=[Profitability,Risk_Control],
     theta=[90,270],
-    width=[60,30,],
+    width=[Profitability,Risk_Control,],
     marker_color=["#E4FF87", '#709BFF'],
     marker_line_color="black",
     marker_line_width=2,
