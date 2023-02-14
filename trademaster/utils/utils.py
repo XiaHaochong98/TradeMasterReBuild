@@ -281,6 +281,7 @@ def calculate_radar_score(dir_name,metric_path,agent_id,metrics_sigma_dict,zero_
     for file in test_scores_files:
         with open(file, 'rb') as f:
             test_scores_dicts.append(pickle.load(f))
+    print('test_scores_dicts:',test_scores_dicts)
     test_metrics=evaluate_metrics(test_scores_dicts)
     #turn metrics to sigma
     profit_metric_names=['Excess_Profit','tr','sharpe_ratio','cr','sor']
