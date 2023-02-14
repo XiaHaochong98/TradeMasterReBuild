@@ -260,6 +260,7 @@ def create_radar_score_baseline(dir_name,metric_path):
     zero_metrics=evaluate_metrics(zero_scores_dicts)
     # print('fifty_scores_dicts: ',fifty_scores_dicts)
     fifty_metrics=evaluate_metrics(fifty_scores_dicts)
+    print(zero_metrics,fifty_metrics)
 
     metrics_sigma_dict={}
     metrics_sigma_dict['Excess_Profit']=abs(zero_metrics['Excess_Profit']-fifty_metrics['Excess_Profit'])/0.675
