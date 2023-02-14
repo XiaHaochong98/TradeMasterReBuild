@@ -293,7 +293,7 @@ def calculate_radar_score(dir_name,metric_path,agent_id,metrics_sigma_dict,zero_
         test_metrics_scores_dict[metric_name]=norm.cdf((test_metrics[metric_name]-zero_metrics[metric_name])/metrics_sigma_dict[metric_name])*200-100
     for metric_name in risk_metric_names:
         test_metrics_scores_dict[metric_name] = norm.cdf(
-           3-(test_metrics[metric_name] - zero_metrics[metric_name]) / metrics_sigma_dict[metric_name]) * 100
+           3-(test_metrics[metric_name] - zero_metrics[metric_name]) / metrics_sigma_dict[metric_name]) * 200-100
     return test_metrics_scores_dict
 
 def plot_radar_chart(data,id,radar_save_path):
