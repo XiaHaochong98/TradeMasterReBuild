@@ -152,8 +152,8 @@ class AlgorithmicTradingEnvironment(Environments):
                     "Profit Margin": tr * 100,
                     "Buy and Hold Profit":buy_and_hold_profict,
                     "Excess Profit": tr * 100-buy_and_hold_profict,
-                    "daily_return_df": daily_return,
-                    "total_assets_df": assets
+                    "daily_return": daily_return,
+                    "total_assets": assets
                 }
             )
             metric_save_path=osp.join(osp.dirname(self.df_path),'metric_'+str(self.task)+'_'+str(self.test_style)+'_'+str(self.test_id)+'_'+str(self.task_index)+'.pickle')
