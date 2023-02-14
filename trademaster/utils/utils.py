@@ -314,6 +314,6 @@ def plot_radar_chart(data,id,radar_save_path):
         showlegend=False
     )
     # fig.show()
-    radar_save_path+=id+'.png'
+    radar_save_path+='_'+id+'.png'
     print('Radar plot printed to:',radar_save_path)
     fig.write_image(radar_save_path)

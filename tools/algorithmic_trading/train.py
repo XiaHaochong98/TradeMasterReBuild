@@ -127,7 +127,7 @@ def test_dqn():
         test_metrics_scores_dict = calculate_radar_score(dir_name,metric_path,'agent_'+str(test_style),metrics_sigma_dict,zero_metrics)
         radar_plot_path=dir_name
         # 'metric_' + str(self.task) + '_' + str(self.test_style) + '_' + str(id) + '_radar.png')
-        plot_radar_chart(test_metrics_scores_dict,'agent',radar_plot_path)
+        plot_radar_chart(test_metrics_scores_dict,str(test_style)+'_agent',radar_plot_path)
         print('win rate is: ', sum(r > 0 for r in daily_return_list) / len(daily_return_list))
         print('blind_bid win rate is: ', sum(r > 0 for r in daily_return_list_Blind_Bid) / len(daily_return_list_Blind_Bid))
         print('blind_bid win rate is: ', sum(r > 0 for r in daily_return_list_Do_Nothing) / len(daily_return_list_Do_Nothing))
