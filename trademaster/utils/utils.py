@@ -304,7 +304,7 @@ def plot_radar_chart(data,id,radar_save_path):
     for metric in ['Excess_Profit','sharpe_ratio','cr','sor']:
         data_list_profit.append(data[metric])
     for metric in ['vol','mdd']:
-        data_list_profit.append(data[metric])
+        data_list_risk.append(data[metric])
 
     fig = go.Figure()
     fig.add_trace(go.Scatterpolar(
@@ -320,15 +320,15 @@ def plot_radar_chart(data,id,radar_save_path):
         fill='toself',
         line_color='deepskyblue'
     ))
-    # fig.update_layout(
-    #     polar=dict(
-    #         radialaxis=dict(
-    #             range=[-100,100],
-    #             visible=True
-    #         ),
-    #     ),
-    #     showlegend=False
-    # )
+    fig.update_layout(
+        polar=dict(
+            radialaxis=dict(
+                range=[-100,100],
+                visible=True
+            ),
+        ),
+        showlegend=False
+    )
     # fig.show()
     radar_save_path+='_'+id+'.png'
     print('Radar plot printed to:',radar_save_path)
