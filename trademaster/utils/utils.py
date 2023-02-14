@@ -243,22 +243,22 @@ def create_radar_score_baseline(dir_name,metric_path):
     # The distribution of the score of policies is a normal distribution
     # The Do Nothing policy is 0.5 percentile and baseline policy should be the 0.75 percentile(0.675 sigma away from Do Nothing)
     # Then we can score policies based on the conversion of sigma and metric value
-    metric_path=metric_path + '_Do_Nothing'
-    zero_scores_files = [osp.join(dir_name,filename) for filename in os.listdir(dir_name) if filename.startswith(metric_path)]
+    metric_path_zero=metric_path + '_Do_Nothing'
+    zero_scores_files = [osp.join(dir_name,filename) for filename in os.listdir(dir_name) if filename.startswith(metric_path_zero)]
     zero_scores_dicts =[]
     for file in zero_scores_files:
         with open(file, 'rb') as f:
             zero_scores_dicts.append(pickle.load(f))
     # get 50-score metrics
-    metric_path=metric_path + '_Blind_Bid'
-    fifty_scores_files = [osp.join(dir_name,filename) for filename in os.listdir(dir_name) if filename.startswith(metric_path)]
+    metric_path_fifty=metric_path + '_Blind_Bid'
+    fifty_scores_files = [osp.join(dir_name,filename) for filename in os.listdir(dir_name) if filename.startswith(metric_path_fifty)]
     fifty_scores_dicts =[]
     for file in fifty_scores_files:
         with open(file, 'rb') as f:
             fifty_scores_dicts.append(pickle.load(f))
     # We only assume the daily return follows normal distribution so to give a overall metric across multiple tests we will calculate the metrics here.
     zero_metrics=evaluate_metrics(zero_scores_dicts)
-    print('fifty_scores_dicts: ',fifty_scores_dicts)
+    # print('fifty_scores_dicts: ',fifty_scores_dicts)
     fifty_metrics=evaluate_metrics(fifty_scores_dicts)
 
     metrics_sigma_dict={}
