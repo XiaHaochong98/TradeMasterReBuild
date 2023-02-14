@@ -333,6 +333,7 @@ def plot_radar_chart(data,id,radar_save_path):
 #     opacity=0.8
 # ))
     fig.update_layout(
+        template=None,
         polar=dict(
             radialaxis=dict(
                 range=[-110,110],
