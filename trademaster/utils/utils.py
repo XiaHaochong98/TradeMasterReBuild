@@ -320,15 +320,15 @@ def plot_radar_chart(data,id,radar_save_path):
         fill='toself',
         line_color='deepskyblue'
     ))
-    fig.update_layout(
-        polar=dict(
-            radialaxis=dict(
-                range=[-100,100],
-                visible=True
-            ),
-        ),
-        showlegend=False
-    )
+    # fig.update_layout(
+    #     polar=dict(
+    #         radialaxis=dict(
+    #             range=[-100,100],
+    #             visible=True
+    #         ),
+    #     ),
+    #     showlegend=False
+    # )
     # fig.show()
     radar_save_path+='_'+id+'.png'
     print('Radar plot printed to:',radar_save_path)
