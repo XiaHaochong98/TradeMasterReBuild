@@ -210,8 +210,9 @@ def evaluate_metrics(scores_dicts):
     cr_list = []
     for scores_dict in scores_dicts:
         Excess_Profit_list.append(scores_dict['Excess Profit'])
+        print('scores_dict["total_assets"] ',scores_dict["total_assets"].shape)
         tr_list.append(
-            scores_dict["total_assets"].values[-1] / (scores_dict["total_assets"].values[0] + 1e-10) - 1)
+            scores_dict["total_assets"][-1] / (scores_dict["total_assets"][0] + 1e-10) - 1)
         daily_return_list.append(scores_dict["daily_return"])
         mdd = max((max(scores_dict["total_assets"]) - scores_dict["total_assets"]) / (
             max(scores_dict["total_assets"])) + 1e-10)
