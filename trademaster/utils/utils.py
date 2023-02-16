@@ -326,6 +326,8 @@ def plot_radar_chart(data,id,radar_save_path):
 ))
 
     fig.update_layout(
+        font_size=16,
+        legend_font_size=16,
         template=None,
         barmode='overlay',
         polar=dict(
