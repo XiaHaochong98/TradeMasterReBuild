@@ -322,8 +322,8 @@ def plot_radar_chart(data,id,radar_save_path):
     width=[90],
     marker_color=["#E4FF87"],
     marker_line_color="black",
-    marker_line_width=2,
-    opacity=0.8,
+    marker_line_width=0.5,
+    opacity=0.7,
     name='Profitability'
 ))
     fig.add_trace(go.Barpolar(
@@ -332,14 +332,14 @@ def plot_radar_chart(data,id,radar_save_path):
         width=[90],
         marker_color=['#709BFF'],
         marker_line_color="black",
-        marker_line_width=2,
-        opacity=0.8,
+        marker_line_width=0.5,
+        opacity=0.7,
         name='Risk_Control'
     ))
 
     fig.update_layout(
         font_size=16,
-        legend_font_size=26,
+        legend_font_size=22,
         template=None,
         barmode='overlay',
         polar=dict(
