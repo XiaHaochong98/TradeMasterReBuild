@@ -318,9 +318,8 @@ def plot_radar_chart(data,id,radar_save_path):
 
     fig.add_trace(go.Barpolar(
     r=[Profitability,Risk_Control],
-        # r0=-100,
     theta=[90,270],
-    width=[90,90,],
+    width=[90,90],
     marker_color=["#E4FF87", '#709BFF'],
     marker_line_color="black",
     marker_line_width=2,
@@ -334,7 +333,7 @@ def plot_radar_chart(data,id,radar_save_path):
     ,tickvals = [0,50,100,150,200],
             ticktext = [-100,-50,0,50,100]
     ),
-            angularaxis=dict(showticklabels=False, ticks='')
+            angularaxis=dict(showticklabels=True, ticks='')
         )
     )
     # ax = fig.add_subplot(111, polar=True)
