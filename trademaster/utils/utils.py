@@ -312,18 +312,30 @@ def plot_radar_chart(data,id,radar_save_path):
         r=data_list_profit+data_list_risk,
         theta=[0,60,120,180,240,300],
         fill=None,
-        line_color='peru'
+        line_color='peru',
+        name='Metrics Radar'
     ))
-    print(data_list_profit+data_list_risk,Risk_Control,Profitability)
+    # print(data_list_profit+data_list_risk,Risk_Control,Profitability)
     fig.add_trace(go.Barpolar(
-    r=[Profitability,Risk_Control],
-    theta=[90,270],
-    width=[90,90],
-    marker_color=["#E4FF87", '#709BFF'],
+    r=[Profitability],
+    theta=[90],
+    width=[90],
+    marker_color=["#E4FF87"],
     marker_line_color="black",
     marker_line_width=2,
-    opacity=0.8
+    opacity=0.8,
+    name='Profitability'
 ))
+    fig.add_trace(go.Barpolar(
+        r=[Risk_Control],
+        theta=[270],
+        width=[90],
+        marker_color=['#709BFF'],
+        marker_line_color="black",
+        marker_line_width=2,
+        opacity=0.8,
+        name='Risk_Control'
+    ))
 
     fig.update_layout(
         font_size=16,
