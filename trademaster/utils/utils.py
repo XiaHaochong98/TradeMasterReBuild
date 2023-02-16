@@ -310,8 +310,7 @@ def plot_radar_chart(data,id,radar_save_path):
     fig = go.Figure()
     fig.add_trace(go.Scatterpolar(
         r=data_list_profit+data_list_risk,
-        theta=['Excess Profit', 'Sharp Ratio',
-               'Calmar Ratio','Sortino Ratio']+['Volatility', 'Max Drawdown'],
+        theta=[0,60,120,180,240,300],
         fill=None,
         line_color='peru'
     ))
@@ -334,7 +333,10 @@ def plot_radar_chart(data,id,radar_save_path):
     ,tickvals = [0,50,100,150,200],
             ticktext = [-100,-50,0,50,100]
     ),
-            angularaxis=dict(showticklabels=True, ticks='')
+            angularaxis=dict(showticklabels=True, ticks='',
+            tickvals=[0,60,120,180,240,300],
+            ticktext=['Excess Profit', 'Sharp Ratio',
+               'Calmar Ratio','Sortino Ratio']+['Volatility', 'Max Drawdown'])
         )
     )
     # ax = fig.add_subplot(111, polar=True)
