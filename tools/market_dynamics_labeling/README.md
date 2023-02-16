@@ -13,10 +13,10 @@ The score of the PRIDE-Star is calculated as described:
 - Blind Buy metrics are used as score 50 (-50 if worse than Do Nothing)
 - The score of other agents are given based on the assumption that the scores are following a normal distribution (50,$\sqrt{50}$)
 
-# Market Regime Labeling
+# Market Dynamics Labeling
 
 ***
-Market regime can be a useful market feature, but it is not well-defined. The intuition of this model is to label the time-series data
+Market dynamics can be a useful market feature, but it is not well-defined. The intuition of this model is to label the time-series data
 into different regimes. 
 
 

@@ -302,9 +302,10 @@ class Labeler():
         ax.set_title(tic + '_linear_regression_regime', fontsize=20)
         if not os.path.exists('res/linear_model/'+folder_name):
             os.makedirs('res/linear_model/'+folder_name)
-
-        fig.savefig('res/linear_model/'+folder_name+ tic + '.png')
+        fig_path='res/linear_model/'+folder_name+ tic + '.png'
+        fig.savefig(fig_path)
         plt.close(fig)
+        return os.path.abspath(fig_path)
 
     def linear_regession_timewindow(self,data_ori, tic, adjcp_timewindow):
         # This is the version of linear regession that does not use a turning point to segment. Instead, it applys a fixed-length time winodw.
