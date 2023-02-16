@@ -308,16 +308,16 @@ def plot_radar_chart(data,id,radar_save_path):
     Risk_Control=sum(data_list_risk)/len(data_list_risk)
     Profitability=sum(data_list_profit)/len(data_list_profit)
     fig = go.Figure()
-    # fig.add_trace(go.Scatterpolar(
-    #     r=data_list_profit+data_list_risk,
-    #     theta=['Excess Profit', 'Sharp Ratio',
-    #            'Calmar Ratio','Sortino Ratio']+['Volatility', 'Max Drawdown'],
-    #     fill=None,
-    #     line_color='peru'
-    # ))
+    fig.add_trace(go.Scatterpolar(
+        r=data_list_profit+data_list_risk,
+        theta=['Excess Profit', 'Sharp Ratio',
+               'Calmar Ratio','Sortino Ratio']+['Volatility', 'Max Drawdown'],
+        fill=None,
+        line_color='peru'
+    ))
 
     fig.add_trace(go.Barpolar(
-    r=[100+Profitability,100+Risk_Control],
+    r=[Profitability,Risk_Control],
         # r0=-100,
     theta=[90,270],
     width=[90,90,],
@@ -326,29 +326,6 @@ def plot_radar_chart(data,id,radar_save_path):
     marker_line_width=2,
     opacity=0.8
 ))
-    # fig.update_traces(marker_colorbar_tick0= -100, selector = dict(type='barpolar'))
-#     fig.update_layout(
-#         template=None,
-#         polar=dict(
-#             radialaxis=dict(
-#                 range=[-110,110],
-#                 visible=True
-#             ),
-#             angularaxis=dict(showticklabels=False, ticks='')
-#         ),
-#         showlegend=False
-#     )
-    # fig.show()
-
-    # fig = go.Figure(go.Barpolar(
-    #     r=[3.5, 1.5, 2.5, 4.5, 4.5, 4, 3],
-    #     theta=[65, 15, 210, 110, 312.5, 180, 270],
-    #     width=[20, 15, 10, 20, 15, 30, 15, ],
-    #     marker_color=["#E4FF87", '#709BFF', '#709BFF', '#FFAA70', '#FFAA70', '#FFDF70', '#B6FFB4'],
-    #     marker_line_color="black",
-    #     marker_line_width=2,
-    #     opacity=0.8
-    # ))
 
     fig.update_layout(
         template=None,
