@@ -336,7 +336,6 @@ def plot_radar_chart(data,id,radar_save_path):
             angularaxis=dict(showticklabels=True, ticks='')
         )
     )
-    print(fig.)
     # ax = fig.add_subplot(111, polar=True)
     # ax.set_xticklabels(['-100','-50','0','50','100'])
 
