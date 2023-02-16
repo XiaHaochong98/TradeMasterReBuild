@@ -308,14 +308,14 @@ def plot_radar_chart(data,id,radar_save_path):
     Risk_Control=sum(data_list_risk)/len(data_list_risk)
     Profitability=sum(data_list_profit)/len(data_list_profit)
     fig = go.Figure()
-    # fig.add_trace(go.Scatterpolar(
-    #     r=data_list_profit+data_list_risk,
-    #     theta=['Excess Profit', 'Sharp Ratio',
-    #            'Calmar Ratio','Sortino Ratio']+['Volatility', 'Max Drawdown'],
-    #     fill=None,
-    #     line_color='peru'
-    # ))
-    print(Risk_Control,Profitability)
+    fig.add_trace(go.Scatterpolar(
+        r=data_list_profit+data_list_risk,
+        theta=['Excess Profit', 'Sharp Ratio',
+               'Calmar Ratio','Sortino Ratio']+['Volatility', 'Max Drawdown'],
+        fill=None,
+        line_color='peru'
+    ))
+    print(data_list_profit+data_list_risk,Risk_Control,Profitability)
     fig.add_trace(go.Barpolar(
     r=[Profitability,Risk_Control],
     theta=[90,270],
