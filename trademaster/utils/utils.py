@@ -302,9 +302,9 @@ def plot_radar_chart(data,id,radar_save_path):
     data_list_profit=[]
     data_list_risk=[]
     for metric in ['Excess_Profit','sharpe_ratio','cr','sor']:
-        data_list_profit.append(data[metric])
+        data_list_profit.append(data[metric]+100)
     for metric in ['vol','mdd']:
-        data_list_risk.append(data[metric])
+        data_list_risk.append(data[metric]+100)
     Risk_Control=sum(data_list_risk)/len(data_list_risk)
     Profitability=sum(data_list_profit)/len(data_list_profit)
     fig = go.Figure()
