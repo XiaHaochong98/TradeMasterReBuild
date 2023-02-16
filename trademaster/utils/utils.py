@@ -353,12 +353,15 @@ def plot_radar_chart(data,id,radar_save_path):
     fig.update_layout(
         template=None,
         polar=dict(
-            radialaxis=dict(range=[0,200],visible=True, showticklabels=False, ticks=''),
+            radialaxis=dict(range=[0,200],visible=True, showticklabels=False, ticks=''
+    ,tickvals = [0,50,100,150,200],
+               ticktext = [-100,-50,0,50,100]
+    ),
             angularaxis=dict(showticklabels=False, ticks='')
         )
     )
-    ax = fig.add_subplot(111, polar=True)
-    ax.set_xticklabels(['-100','-50','0','50','100'])
+    # ax = fig.add_subplot(111, polar=True)
+    # ax.set_xticklabels(['-100','-50','0','50','100'])
 
     radar_save_path+='_'+id+'.png'
     print('Radar plot printed to:',radar_save_path)
