@@ -113,7 +113,6 @@ def test_dqn():
             return 2*env.max_volume
         def Do_Nothing(states,env):
             return env.max_volume
-
         daily_return_list = []
         daily_return_list_Blind_Bid=[]
         daily_return_list_Do_Nothing=[]
@@ -121,14 +120,13 @@ def test_dqn():
             daily_return_list.extend(trainer.test())
             daily_return_list_Blind_Bid.extend(trainer.test_with_customize_policy(Blind_Bid,'Blind_Bid'))
             daily_return_list_Do_Nothing.extend(trainer.test_with_customize_policy(Do_Nothing,'Do_Nothing'))
-            dir_name=osp.dirname(trainer.test_environment.df_path)
             metric_path='metric_' + str(trainer.test_environment.task) + '_' + str(trainer.test_environment.test_style)
-        metrics_sigma_dict,zero_metrics=create_radar_score_baseline(dir_name,metric_path)
-        test_metrics_scores_dict = calculate_radar_score(dir_name,metric_path,'agent',metrics_sigma_dict,zero_metrics)
-        radar_plot_path=dir_name
+        metrics_sigma_dict,zero_metrics=create_radar_score_baseline(cfg.work_dir,metric_path)
+        test_metrics_scores_dict = calculate_radar_score(cfg.work_dir,metric_path,'agent',metrics_sigma_dict,zero_metrics)
+        radar_plot_path=cfg.work_dir
         # 'metric_' + str(self.task) + '_' + str(self.test_style) + '_' + str(id) + '_radar.png')
         print('test_metrics_scores are: ',test_metrics_scores_dict)
-        plot_radar_chart(test_metrics_scores_dict,str(test_style)+'_agent',radar_plot_path)
+        plot_radar_chart(test_metrics_scores_dict,'radar_plot_agent_'+str(test_style)+'.png',radar_plot_path)
         print('win rate is: ', sum(r > 0 for r in daily_return_list) / len(daily_return_list))
         print('blind_bid win rate is: ', sum(r > 0 for r in daily_return_list_Blind_Bid) / len(daily_return_list_Blind_Bid))
         print('blind_bid win rate is: ', sum(r > 0 for r in daily_return_list_Do_Nothing) / len(daily_return_list_Do_Nothing))

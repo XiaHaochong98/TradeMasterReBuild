@@ -16,6 +16,11 @@ from mmcv import Config
 
 from trademaster.utils import replace_cfg_vals
 from flask_cors import CORS
+import os.path as osp
+import pickle
+
+from tools import market_dynamics_labeling
+import base64
 
 tz = pytz.timezone('Asia/Shanghai')
 
@@ -344,19 +349,71 @@ class Server():
             logger.info(info)
             return jsonify(res)
 
-    def style_test(self, request):
+    def start_market_dynamics_labeling(self, request):
         request_json = json.loads(request.get_data(as_text=True))
         try:
+            # market_dynamics_labeling parameters
+            args={}
+            args['dataset_name'] = request_json.get("style_test_dataset_name")
+            args['number_of_market_dynamics'] = request_json.get("number_of_market_style")
+            if args['number_of_market_dynamics'] not in [3,4]:
+                raise Exception('only support dynamics number of 3 or 4 for now')
+            args['minimun_length'] = request_json.get("minimun_length")
+            args['Granularity'] = request_json.get("Granularity")
+            args['bear_threshold'] = request_json.get("bear_threshold")
+            args['bull_threshold'] = request_json.get("bull_threshold")
+            args['task_name']=request_json.get("task_name")
+            # agent training parameters
+            task_name = request_json.get("task_name")
+            dataset_name = request_json.get("dataset_name").split(":")[-1]
+            optimizer_name = request_json.get("optimizer_name")
+            loss_name = request_json.get("loss_name")
+            agent_name = request_json.get("agent_name").split(":")[-1]
+            session_id= request_json.get("session_id")
+            work_dir = os.path.join(ROOT, "work_dir", session_id,
+                                    f"{task_name}_{dataset_name}_{agent_name}_{agent_name}_{optimizer_name}_{loss_name}")
 
-            session_id = request_json.get("session_id")
-            style_test_mode = request_json.get("style_test")
+            cfg_path = os.path.join(ROOT, "configs", task_name,
+                                    f"{task_name}_{dataset_name}_{agent_name}_{agent_name}_{optimizer_name}_{loss_name}.py")
+            cfg = Config.fromfile(cfg_path)
+            cfg = replace_cfg_vals(cfg)
+            cfg.work_dir = "work_dir/{}/{}".format(session_id,
+                                                   f"{task_name}_{dataset_name}_{agent_name}_{agent_name}_{optimizer_name}_{loss_name}")
+            cfg.trainer.work_dir = cfg.work_dir
+
+            #prepare data
+            test_start_date = request_json.get("style_test_start_date")
+            test_end_date = request_json.get("style_test_end_date")
+
+            data = pd.read_csv(os.path.join(ROOT, cfg.data.data_path, "data.csv"), index_col=0)
+            data = data[(data["date"] >= test_start_date) & (data["date"] < test_end_date)]
+            data_path=os.path.join(work_dir, "style_test.csv")
+            data.to_csv(data_path)
+            args['dataset_path']=data_path
+
+
+            #front-end args to back-end args
+            args=market_dynamics_labeling.MRL_F2B_args_converter(args)
+
+            #run market_dynamics_labeling
+            process_datafile_path,market_dynamic_labeling_visualization_paths=market_dynamics_labeling.main(args)
+
+            #TODO: Find a better way to pick a visulization for PM task
+
+            with open(market_dynamic_labeling_visualization_paths[0], "rb") as image_file:
+                encoded_string = base64.b64encode(image_file.read())
+
+            # update session information:
+            with open(os.path.join(work_dir,'style_test_data_path.pickle') , 'wb') as handle:
+                pickle.dump(process_datafile_path, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
             error_code = 0
-            info = "style test request success"
+            info = "request success, show market dynamics labeling visualization"
+
             res = {
                 "error_code": error_code,
                 "info": info,
-                "session_id": session_id
+                "market_dynamic_labeling_visulization": encoded_string
             }
             logger.info(info)
             return jsonify(res)
@@ -367,7 +424,112 @@ class Server():
             res = {
                 "error_code": error_code,
                 "info": info,
-                "session_id": session_id
+                "market_dynamic_labeling_visulization": ""
+            }
+            logger.info(info)
+            return jsonify(res)
+
+    def save_market_dynamics_labeling(self, request):
+        request_json = json.loads(request.get_data(as_text=True))
+        try:
+            # same as agent training
+            task_name = request_json.get("task_name")
+            dataset_name = request_json.get("dataset_name").split(":")[-1]
+            optimizer_name = request_json.get("optimizer_name")
+            loss_name = request_json.get("loss_name")
+            agent_name = request_json.get("agent_name").split(":")[-1]
+            session_id = request_json.get("session_id")
+            work_dir = os.path.join(ROOT, "work_dir", session_id,
+                                    f"{task_name}_{dataset_name}_{agent_name}_{agent_name}_{optimizer_name}_{loss_name}")
+            with open(os.path.join(work_dir,'style_test_data_path.pickle') , 'wb') as f:
+                process_datafile_path=pickle.load(f)
+            cfg_path = os.path.join(ROOT, "configs", task_name,
+                                    f"{task_name}_{dataset_name}_{agent_name}_{agent_name}_{optimizer_name}_{loss_name}.py")
+            cfg = Config.fromfile(cfg_path)
+            cfg = replace_cfg_vals(cfg)
+            # build dataset
+            cfg.data.test_style_path = process_datafile_path
+            cfg_path = os.path.join(work_dir, osp.basename(cfg_path))
+            cfg.dump(cfg_path)
+            logger.info(cfg)
+            error_code = 0
+            info = "request success, save market dynamics"
+            res = {
+                "error_code": error_code,
+                "info": info
+            }
+            logger.info(info)
+            return jsonify(res)
+
+        except Exception as e:
+            error_code = 1
+            info = "request data error, {}".format(e)
+            res = {
+                "error_code": error_code,
+                "info": info
+            }
+            logger.info(info)
+            return jsonify(res)
+
+
+    def run_style_test(self, request):
+        request_json = json.loads(request.get_data(as_text=True))
+        try:
+            #
+            style_test_label = request_json.get("test_dynamic_label")
+            # same as agent training
+            task_name = request_json.get("task_name")
+            dataset_name = request_json.get("dataset_name").split(":")[-1]
+            optimizer_name = request_json.get("optimizer_name")
+            loss_name = request_json.get("loss_name")
+            agent_name = request_json.get("agent_name").split(":")[-1]
+            session_id = request_json.get("session_id")
+            work_dir = os.path.join(ROOT, "work_dir", session_id,
+                                    f"{task_name}_{dataset_name}_{agent_name}_{agent_name}_{optimizer_name}_{loss_name}")
+
+            cfg_path = os.path.join(ROOT, "configs", task_name,
+                                    f"{task_name}_{dataset_name}_{agent_name}_{agent_name}_{optimizer_name}_{loss_name}.py")
+            cfg = Config.fromfile(cfg_path)
+            cfg = replace_cfg_vals(cfg)
+            cfg_path = os.path.join(work_dir, osp.basename(cfg_path))
+            log_path = os.path.join(work_dir, "style_test_"+str(style_test_label)+"_log.txt")
+            train_script_path = self.train_scripts(task_name, dataset_name, optimizer_name, loss_name, agent_name)
+            cmd = "conda activate python3.9 && nohup python -u {} --config {} --task_name style_test --test_style {} > {} 2>&1 &".format(
+                train_script_path,
+                cfg_path,
+                style_test_label,
+                log_path)
+            executor.submit(run_cmd, cmd)
+            logger.info(cmd)
+
+            radar_plot_path=osp.join(work_dir,'radar_plot_agent_'+str(style_test_label)+'.png')
+            with open(radar_plot_path, "rb") as image_file:
+                encoded_string = base64.b64encode(image_file.read())
+
+            #print log output
+            print_log_cmd = "tail -n 2000 {}".format(log_path)
+            style_test_log_info = run_cmd(print_log_cmd)
+
+
+            error_code = 0
+            info = f"request success, start test market {style_test_label}\n\n"
+            res = {
+                "error_code": error_code,
+                "info": info+style_test_log_info,
+                "session_id": session_id,
+                'radar_plot':encoded_string
+            }
+            logger.info(info)
+            return jsonify(res)
+
+        except Exception as e:
+            error_code = 1
+            info = "request data error, {}".format(e)
+            res = {
+                "error_code": error_code,
+                "info": info,
+                "session_id": "",
+                'radar_plot':""
             }
             logger.info(info)
             return jsonify(res)
@@ -425,6 +587,21 @@ def test():
 @app.route("/api/TradeMaster/test_status", methods=["POST"])
 def test_status():
     res = SERVER.test_status(request)
+    return res
+
+@app.route("/api/TradeMaster/start_market_dynamics_labeling", methods=["POST"])
+def style_test():
+    res = SERVER.start_market_dynamics_labeling(request)
+    return res
+
+@app.route("/api/TradeMaster/save_market_dynamics_labeling", methods=["POST"])
+def style_test():
+    res = SERVER.save_market_dynamics_labeling(request)
+    return res
+
+@app.route("/api/TradeMaster/run_style_test", methods=["POST"])
+def style_test():
+    res = SERVER.run_style_test(request)
     return res
 
 @app.route("/api/TradeMaster/style_test", methods=["POST"])

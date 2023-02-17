@@ -15,6 +15,7 @@ import os.path as osp
 from mmcv import Config
 from trademaster.utils import replace_cfg_vals
 import subprocess
+import pandas as pd
 tz = pytz.timezone('Asia/Shanghai')
 
 root = os.path.dirname(os.path.abspath(__file__))
@@ -211,16 +212,17 @@ class Server():
     def start_market_dynamics_labeling(self, request):
         request_json = json.loads(request.get_data(as_text=True))
         try:
-            #same as agent training
+            # market_dynamics_labeling parameters
             args={}
             args['dataset_name'] = request_json.get("style_test_dataset_name")
-            args['number_of_market_style'] = request_json.get("number_of_market_style")
-            args['test_start_date'] = request_json.get("style_test_start_date")
-            args['test_end_date'] = request_json.get("style_test_end_date")
+            args['number_of_market_dynamics'] = request_json.get("number_of_market_style")
+            if args['number_of_market_dynamics'] not in [3,4]:
+                raise Exception('only support dynamics number of 3 or 4 for now')
             args['minimun_length'] = request_json.get("minimun_length")
             args['Granularity'] = request_json.get("Granularity")
             args['bear_threshold'] = request_json.get("bear_threshold")
             args['bull_threshold'] = request_json.get("bull_threshold")
+            args['task_name']=request_json.get("task_name")
             # agent training parameters
             task_name = request_json.get("task_name")
             dataset_name = request_json.get("dataset_name").split(":")[-1]
@@ -231,9 +233,24 @@ class Server():
             work_dir = os.path.join(ROOT, "work_dir", session_id,
                                     f"{task_name}_{dataset_name}_{agent_name}_{agent_name}_{optimizer_name}_{loss_name}")
 
+            cfg_path = os.path.join(ROOT, "configs", task_name,
+                                    f"{task_name}_{dataset_name}_{agent_name}_{agent_name}_{optimizer_name}_{loss_name}.py")
+            cfg = Config.fromfile(cfg_path)
+            cfg = replace_cfg_vals(cfg)
+            cfg.work_dir = "work_dir/{}/{}".format(session_id,
+                                                   f"{task_name}_{dataset_name}_{agent_name}_{agent_name}_{optimizer_name}_{loss_name}")
+            cfg.trainer.work_dir = cfg.work_dir
 
-            error_code = 0
-            info = "request success, show market dynamics labeling visualization"
+            #prepare data
+            test_start_date = request_json.get("style_test_start_date")
+            test_end_date = request_json.get("style_test_end_date")
+
+            data = pd.read_csv(os.path.join(ROOT, cfg.data.data_path, "data.csv"), index_col=0)
+            data = data[(data["date"] >= test_start_date) & (data["date"] < test_end_date)]
+            data_path=os.path.join(work_dir, "style_test.csv")
+            data.to_csv(data_path)
+            args['dataset_path']=data_path
+
 
             #front-end args to back-end args
             args=market_dynamics_labeling.MRL_F2B_args_converter(args)
@@ -249,6 +266,10 @@ class Server():
             # update session information:
             with open(os.path.join(work_dir,'style_test_data_path.pickle') , 'wb') as handle:
                 pickle.dump(process_datafile_path, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+            error_code = 0
+            info = "request success, show market dynamics labeling visualization"
+
             res = {
                 "error_code": error_code,
                 "info": info,
@@ -263,7 +284,6 @@ class Server():
             res = {
                 "error_code": error_code,
                 "info": info,
-                "session_id": "",
                 "market_dynamic_labeling_visulization": ""
             }
             logger.info(info)
@@ -332,7 +352,7 @@ class Server():
             cfg = Config.fromfile(cfg_path)
             cfg = replace_cfg_vals(cfg)
             cfg_path = os.path.join(work_dir, osp.basename(cfg_path))
-            log_path = os.path.join(work_dir, "style_test)"+str(style_test_label)+"_log.txt")
+            log_path = os.path.join(work_dir, "style_test_"+str(style_test_label)+"_log.txt")
             train_script_path = self.train_scripts(task_name, dataset_name, optimizer_name, loss_name, agent_name)
             cmd = "conda activate python3.9 && nohup python -u {} --config {} --task_name style_test --test_style {} > {} 2>&1 &".format(
                 train_script_path,
@@ -342,15 +362,20 @@ class Server():
             executor.submit(run_cmd, cmd)
             logger.info(cmd)
 
-            radar_plot_path=osp.join(work_dir,'radar_plot_'+str(style_test_label)+'.png')
+            radar_plot_path=osp.join(work_dir,'radar_plot_agent_'+str(style_test_label)+'.png')
             with open(radar_plot_path, "rb") as image_file:
                 encoded_string = base64.b64encode(image_file.read())
 
+            #print log output
+            print_log_cmd = "tail -n 2000 {}".format(log_path)
+            style_test_log_info = run_cmd(print_log_cmd)
+
+
             error_code = 0
-            info = f"request success, start test market {style_test_label} "
+            info = f"request success, start test market {style_test_label}\n\n"
             res = {
                 "error_code": error_code,
-                "info": info,
+                "info": info+style_test_log_info,
                 "session_id": session_id,
                 'radar_plot':encoded_string
             }
@@ -425,6 +450,51 @@ def health_check():
 
 
 if __name__ == "__main__":
-    host = "0.0.0.0"
-    port = 8080
-    app.run(host, port)
+    # host = "0.0.0.0"
+    # port = 8080
+    # app.run(host, port)
+
+    server=Server()
+    Request_message_1= {
+        "task_name": "algorithmic_trading",
+        "dataset_name": "algorithmic_trading:BTC",
+        "optimizer_name": "adam",
+        "start_date": "2017-08-08",
+        "end_date": "2018-08-08",
+        "loss_name": "mse",
+        "agent_name": "algorithmic_trading:dqn",
+        "style_test_dataset_name": "algorithmic_trading:BTC",
+        "number_of_market_style": "3",
+        "style_test_start_date": "2018-08-09",
+        "style_test_end_date": "2018-09-08",
+        "minimun_length": "24",
+        "Granularity": "0.5",
+        "bear_threshold": "-0.25",
+        "bull_threshold": "0.25",
+        "session_id": "b5bcd0b6-7a10-11ea-8367-181 dea4d9837"
+    }
+
+    Request_message_1= {
+        "task_name": "algorithmic_trading",
+        "dataset_name": "algorithmic_trading:BTC",
+        "optimizer_name": "adam",
+        "start_date": "2017-08-08",
+        "end_date": "2018-08-08",
+        "loss_name": "mse",
+        "agent_name": "algorithmic_trading:dqn",
+        "style_test_dataset_name": "algorithmic_trading:BTC",
+        "number_of_market_style": "3",
+        "style_test_start_date": "2018-08-09",
+        "style_test_end_date": "2018-09-08",
+        "minimun_length": "24",
+        "Granularity": "1",
+        "bear_threshold": "-0.25",
+        "bull_threshold": "0.25",
+        "session_id": "b5bcd0b6-7a10-11ea-8367-181 dea4d9837"
+    }
+
+
+    server.start_market_dynamics_labeling(Request_message_1)
+    server.start_market_dynamics_labeling()
+    server.save_market_dynamics_labeling()
+    server.run_style_test()

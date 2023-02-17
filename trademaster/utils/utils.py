@@ -298,7 +298,7 @@ def calculate_radar_score(dir_name,metric_path,agent_id,metrics_sigma_dict,zero_
     test_metrics_scores_dict["Risk Control"] = (test_metrics_scores_dict["mdd"] + test_metrics_scores_dict["vol"]) / 2
     return test_metrics_scores_dict
 
-def plot_radar_chart(data,id,radar_save_path):
+def plot_radar_chart(data,plot_name,radar_save_path):
     data_list_profit=[]
     data_list_risk=[]
     for metric in ['Excess_Profit','sharpe_ratio','cr','sor']:
@@ -355,9 +355,8 @@ def plot_radar_chart(data,id,radar_save_path):
     )
     # ax = fig.add_subplot(111, polar=True)
     # ax.set_xticklabels(['-100','-50','0','50','100'])
-
-    radar_save_path+='_'+id+'.png'
-    print('Radar plot printed to:',radar_save_path)
-    fig.write_image(radar_save_path)
+    radar_save_name=osp.join(radar_save_path,plot_name)
+    print('Radar plot printed to:',radar_save_name)
+    fig.write_image(radar_save_name)
 
 
