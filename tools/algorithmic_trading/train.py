@@ -19,6 +19,7 @@ from trademaster.agents.builder import build_agent
 from trademaster.optimizers.builder import build_optimizer
 from trademaster.losses.builder import build_loss
 from trademaster.trainers.builder import build_trainer
+from trademaster.transition.builder import build_transition
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Download Alpaca Datasets')
@@ -74,13 +75,16 @@ def test_dqn():
 
     criterion = build_loss(cfg)
 
+    transition = build_transition(cfg)
+
     agent = build_agent(cfg, default_args=dict(action_dim = action_dim,
                                                state_dim = state_dim,
                                                act = act,
                                                cri = cri,
-                                               act_optimizer=act_optimizer,
-                                               cri_optimizer=cri_optimizer,
-                                               criterion=criterion,
+                                               act_optimizer = act_optimizer,
+                                               cri_optimizer = cri_optimizer,
+                                               criterion = criterion,
+                                               transition = transition,
                                                device=device))
 
     if task_name.startswith("style_test"):
@@ -139,58 +143,4 @@ if __name__ == '__main__':
     algorithmic_trading
     portfolio_management
     """
-
-    # from trademaster.agents import AgentBase, AGENTS
-    #
-    # """step1：Implement a custom Agent"""
-    # @AGENTS.register_module()
-    # class AlgorithmicTradingDQN(AgentBase):
-    #     def __init__(self, **kwargs):
-    #         super(AlgorithmicTradingDQN,
-    #               self).__init__(**kwargs)
-    #
-    # """step2: Load configuration file"""
-    # def parse_args():
-    #     parser = argparse.ArgumentParser(
-    #         description='Load configuration file')
-    #     parser.add_argument("--config",
-    #         default="at_dqn.py",
-    #         help="configuration file path")
-    #     args = parser.parse_args()
-    #     return args
-    # args = parse_args()
-    # cfg = Config.fromfile(args.config)
-    # cfg = replace_cfg_vals(cfg)
-    # """step3: Build dataset"""
-    # dataset = build_dataset(cfg)
-    # """step4: Build enviroment"""
-    # train_environment = build_environment(cfg,
-    #                     default_args=dict(
-    #                         dataset=dataset, task="train"))
-    #
-    # valid_environment = build_environment(cfg,
-    #                     default_args=dict(
-    #                         dataset=dataset, task="valid"))
-    # test_environment = build_environment(cfg,
-    #                     default_args=dict(
-    #                         dataset=dataset, task="test"))
-    # """step5: Build Agent"""
-    # optimizer=build_optimizer(cfg)
-    # criterion = build_loss(cfg)
-    # net = build_net(cfg)
-    # agent = build_agent(cfg, default_args=dict(
-    #                          net=net,
-    #                          optimizer=optimizer,
-    #                          riterion=criterion))
-    # """step6: Build Trainer"""
-    # trainer = build_trainer(cfg,
-    #                         default_args=dict(
-    #                         train_environment=train_environment,
-    #                         valid_environment=valid_environment,
-    #                         test_environment=test_environment,
-    #                         agent=agent))
-    # """step7: Train and Valid"""
-    # trainer.train_and_valid()
-    # """step8: Test"""
-    # trainer.test()
 

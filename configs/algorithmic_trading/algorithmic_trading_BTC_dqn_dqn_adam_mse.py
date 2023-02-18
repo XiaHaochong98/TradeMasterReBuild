@@ -15,6 +15,7 @@ _base_ = [
     f"../_base_/optimizers/{optimizer_name}.py",
     f"../_base_/nets/{net_name}.py",
     f"../_base_/market_dynamics_model/{task_name}/{dataset_name}/mdm.py",
+    f"../_base_/transition/transition.py"
 ]
 
 batch_size = 64
@@ -34,6 +35,9 @@ data = dict(
     forward_num_day=5,
     test_style='-1')
 environment = dict(type='AlgorithmicTradingEnvironment')
+transition = dict(
+    type = "Transition"
+)
 agent = dict(
     type='AlgorithmicTradingDQN',
     max_step=12345,
