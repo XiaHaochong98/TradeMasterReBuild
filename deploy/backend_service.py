@@ -413,7 +413,7 @@ class Server():
             res = {
                 "error_code": error_code,
                 "info": info,
-                "market_dynamic_labeling_visulization": encoded_string
+                "market_dynamic_labeling_visulization": str(encoded_string,'utf-8')
             }
             logger.info(info)
             return jsonify(res)
@@ -517,7 +517,7 @@ class Server():
                 "error_code": error_code,
                 "info": info+style_test_log_info,
                 "session_id": session_id,
-                'radar_plot':encoded_string
+                'radar_plot':str(encoded_string,'utf-8')
             }
             logger.info(info)
             return jsonify(res)
@@ -604,10 +604,6 @@ def style_test():
     res = SERVER.run_style_test(request)
     return res
 
-@app.route("/api/TradeMaster/style_test", methods=["POST"])
-def style_test():
-    res = SERVER.style_test(request)
-    return res
 
 
 @app.route("/api/TradeMaster/healthcheck", methods=["GET"])
