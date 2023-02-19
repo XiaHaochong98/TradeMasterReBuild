@@ -11,9 +11,9 @@ data = dict(
     length_day=10,
     initial_amount=100000,
     transaction_cost_pct=0.001,
-    test_style_path=
+    test_dynamic_path=
     'data/portfolio_management/dj30/DJI_label_by_DJIindex_3_24_-0.25_0.25.csv',
-    test_style='-1')
+    test_dynamic='-1')
 environment = dict(type='PortfolioManagementEIIEEnvironment')
 agent = dict(
     type='PortfolioManagementEIIE',

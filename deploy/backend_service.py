@@ -101,7 +101,7 @@ class Server():
                 "portfolio_management:dj30": "2021-12-31",
                 "portfolio_management:exchange": "2019-12-31",
             },
-            "style_test": [
+            "dynamics_test": [
                 "bear_market",
                 "bull_market",
                 "oscillation_market"
@@ -354,7 +354,7 @@ class Server():
         try:
             # market_dynamics_labeling parameters
             args={}
-            args['dataset_name'] = request_json.get("style_test_dataset_name")
+            args['dataset_name'] = request_json.get("dynamics_test_dataset_name")
             args['number_of_market_dynamics'] = request_json.get("number_of_market_style")
             if args['number_of_market_dynamics'] not in [3,4]:
                 raise Exception('only support dynamics number of 3 or 4 for now')
@@ -382,12 +382,12 @@ class Server():
             cfg.trainer.work_dir = cfg.work_dir
 
             #prepare data
-            test_start_date = request_json.get("style_test_start_date")
-            test_end_date = request_json.get("style_test_end_date")
+            test_start_date = request_json.get("dynamics_test_start_date")
+            test_end_date = request_json.get("dynamics_test_end_date")
 
             data = pd.read_csv(os.path.join(ROOT, cfg.data.data_path, "data.csv"), index_col=0)
             data = data[(data["date"] >= test_start_date) & (data["date"] < test_end_date)]
-            data_path=os.path.join(work_dir, "style_test.csv")
+            data_path=os.path.join(work_dir, "dynamics_test.csv")
             data.to_csv(data_path)
             args['dataset_path']=data_path
 
@@ -404,7 +404,7 @@ class Server():
                 encoded_string = base64.b64encode(image_file.read())
 
             # update session information:
-            with open(os.path.join(work_dir,'style_test_data_path.pickle') , 'wb') as handle:
+            with open(os.path.join(work_dir,'dynamics_test_data_path.pickle') , 'wb') as handle:
                 pickle.dump(process_datafile_path, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
             error_code = 0
@@ -441,14 +441,14 @@ class Server():
             session_id = request_json.get("session_id")
             work_dir = os.path.join(ROOT, "work_dir", session_id,
                                     f"{task_name}_{dataset_name}_{agent_name}_{agent_name}_{optimizer_name}_{loss_name}")
-            with open(os.path.join(work_dir,'style_test_data_path.pickle') , 'wb') as f:
+            with open(os.path.join(work_dir,'dynamics_test_data_path.pickle') , 'wb') as f:
                 process_datafile_path=pickle.load(f)
             cfg_path = os.path.join(ROOT, "configs", task_name,
                                     f"{task_name}_{dataset_name}_{agent_name}_{agent_name}_{optimizer_name}_{loss_name}.py")
             cfg = Config.fromfile(cfg_path)
             cfg = replace_cfg_vals(cfg)
             # build dataset
-            cfg.data.test_style_path = process_datafile_path
+            cfg.data.test_dynamic_path = process_datafile_path
             cfg_path = os.path.join(work_dir, osp.basename(cfg_path))
             cfg.dump(cfg_path)
             logger.info(cfg)
@@ -472,11 +472,11 @@ class Server():
             return jsonify(res)
 
 
-    def run_style_test(self, request):
+    def run_dynamics_test(self, request):
         request_json = json.loads(request.get_data(as_text=True))
         try:
             #
-            style_test_label = request_json.get("test_dynamic_label")
+            dynamics_test_label = request_json.get("dynamics_test_label")
             # same as agent training
             task_name = request_json.get("task_name")
             dataset_name = request_json.get("dataset_name").split(":")[-1]
@@ -492,30 +492,30 @@ class Server():
             cfg = Config.fromfile(cfg_path)
             cfg = replace_cfg_vals(cfg)
             cfg_path = os.path.join(work_dir, osp.basename(cfg_path))
-            log_path = os.path.join(work_dir, "style_test_"+str(style_test_label)+"_log.txt")
+            log_path = os.path.join(work_dir, "dynamics_test_"+str(dynamics_test_label)+"_log.txt")
             train_script_path = self.train_scripts(task_name, dataset_name, optimizer_name, loss_name, agent_name)
-            cmd = "conda activate python3.9 && nohup python -u {} --config {} --task_name style_test --test_style {} > {} 2>&1 &".format(
+            cmd = "conda activate python3.9 && nohup python -u {} --config {} --task_name dynamics_test --test_dynamic {} > {} 2>&1 &".format(
                 train_script_path,
                 cfg_path,
-                style_test_label,
+                dynamics_test_label,
                 log_path)
             executor.submit(run_cmd, cmd)
             logger.info(cmd)
 
-            radar_plot_path=osp.join(work_dir,'radar_plot_agent_'+str(style_test_label)+'.png')
+            radar_plot_path=osp.join(work_dir,'radar_plot_agent_'+str(dynamics_test_label)+'.png')
             with open(radar_plot_path, "rb") as image_file:
                 encoded_string = base64.b64encode(image_file.read())
 
             #print log output
             print_log_cmd = "tail -n 2000 {}".format(log_path)
-            style_test_log_info = run_cmd(print_log_cmd)
+            dynamics_test_log_info = run_cmd(print_log_cmd)
 
 
             error_code = 0
-            info = f"request success, start test market {style_test_label}\n\n"
+            info = f"request success, start test market {dynamics_test_label}\n\n"
             res = {
                 "error_code": error_code,
-                "info": info+style_test_log_info,
+                "info": info+dynamics_test_log_info,
                 "session_id": session_id,
                 'radar_plot':str(encoded_string,'utf-8')
             }
@@ -590,18 +590,18 @@ def test_status():
     return res
 
 @app.route("/api/TradeMaster/start_market_dynamics_labeling", methods=["POST"])
-def style_test():
+def dynamics_test():
     res = SERVER.start_market_dynamics_labeling(request)
     return res
 
 @app.route("/api/TradeMaster/save_market_dynamics_labeling", methods=["POST"])
-def style_test():
+def dynamics_test():
     res = SERVER.save_market_dynamics_labeling(request)
     return res
 
-@app.route("/api/TradeMaster/run_style_test", methods=["POST"])
-def style_test():
-    res = SERVER.run_style_test(request)
+@app.route("/api/TradeMaster/run_dynamics_test", methods=["POST"])
+def dynamics_test():
+    res = SERVER.run_dynamics_test(request)
     return res
 
 

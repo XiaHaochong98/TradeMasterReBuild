@@ -76,8 +76,8 @@ data = dict(
     state_length=10,
     target_order=1,
     initial_amount=100000,
-    test_style_path='data/order_execution/BTC/test_labeled_3_32_-0.01_0.01.csv',
-    test_style='-1')
+    test_dynamic_path='data/order_execution/BTC/test_labeled_3_32_-0.01_0.01.csv',
+    test_dynamic='-1')
 environment = dict(type='OrderExecutionETEOEnvironment')
 agent = dict(
     type='OrderExecutionETEO',

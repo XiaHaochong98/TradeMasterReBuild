@@ -46,7 +46,7 @@ def run_mdm():
 
 
     # task_name = args.task_name
-    # test_style=args.test_style
+    # test_dynamic=args.test_dynamic
 
     cfg = replace_cfg_vals(cfg)
     # update test style

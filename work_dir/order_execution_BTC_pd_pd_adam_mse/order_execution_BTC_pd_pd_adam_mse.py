@@ -12,9 +12,9 @@ data = dict(
     state_length=10,
     target_order=1,
     initial_amount=100000,
-    test_style_path=
+    test_dynamic_path=
     'data/order_execution/PD_BTC/test_labeled_3_24_-0.15_0.15.csv',
-    test_style='-1')
+    test_dynamic='-1')
 environment = dict(type='OrderExecutionPDEnvironment')
 agent = dict(
     type='OrderExecutionPD',

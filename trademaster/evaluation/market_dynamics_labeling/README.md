@@ -1,85 +1,97 @@
-# Evaluation Toolbox
+# Evaluation Toolbox: Market Dynamics Modeling
 
-## The PRIDE-Star
+## Introduction 
+The evaluation toolbox provides a sandbox for user to evaluate their policy under different scenarios . 
+The toolbox shows visualizations and reports to assist user compare policies across market dynamic.
 
-### Baselines
-- Buy and Hold: This is and ideal policy where you spend all your cash on the first tick.
-- Blind Buy: Continues buy until the cash runs out.
-- Do Nothing: Do nothing
+## Market Dynamics modeling
+The Market Dynamics modeling is a module to label raw data with dynamics that is interpretable. 
+The dynamics are used as meta-information. For example, in the evaluation process, user can run evaluation on specific dynamics.
 
-### Score Calculation
-The score of the PRIDE-Star is calculated as described:
+## Usage & Example
+The Evaluation Toolbox module prepare data for evaluation, to run a full test you should follow this pipeline:
+- Run the [`run.py`]()  in tools/market_dynamics_labeling or [`linear_model.py`]() to prepare the dataset
+  1. Tune the parameters based on the visualization results
+     <div align="center">
+       <img src="example_figs/MDM_result_1.png" width = 400 height =  />
+     </div>
+  1. Increase `length_limit`
+      <div align="center">
+       <img src="example_figs/MDM_result_2.png" width = 400 height =  />
+      </div>
+  1. Modify `labeling_parameters`
+      <div align="center">
+        <img src="example_figs/MDM_result_3.png" width = 400 height =  />
+      </div> 
+- Update the 'test_style_path' in the config files to the dataset path you get from previous step.
+
+- Run the trainer with arguments `--task dynamics_test --test_dynamic dynamic_label` to perform evaluation on specific market dynamic. You will get reports and visualization result.
+  <div align="center">
+          <img src="example_figs/Radar_plot.png" width = 400 height =  />
+        </div> 
+#### Parameters 
+- `fitting_parameters`: This is a set of parameters for the filter, please refer to the comment in lines for detailed description. 
+- `labeling_parameters`: This is a set of parameters for regime classification, please refer to the comment in lines for detailed description. 
+- `regime_number`: This is the number of regimes. 
+- `length_limit`: This is the minimum length of a consecutive time-series of same regime. 
+
+#### Scoring
+The scores of the visualization result are calculated as described:
 - Do nothing metrics are used as score 0
 - Blind Buy metrics are used as score 50 (-50 if worse than Do Nothing)
 - The score of other agents are given based on the assumption that the scores are following a normal distribution (50,$\sqrt{50}$)
-
-# Market Dynamics Labeling
-
-***
-Market dynamics can be a useful market feature, but it is not well-defined. The intuition of this model is to label the time-series data
-into different regimes. 
+##### Baselines
+  - Buy and Hold: This is and ideal policy where you spend all your cash on the first tick.
+  - Blind Buy: Continues buy until the cash runs out.
+  - Do Nothing: Do nothing
 
 
-## Methods
 
-### Linear Model
-Using slope of linear regression model as the metric for market regime, this is the most explainable
-method where each regime has an explicit threshold.
 
-#### parameters 
-1. method: We only provide linear method for now
-2. fitting_parameters: This is a set of parameters for the filter, please refer to the comment in lines for detailed description.
-3. labeling_parameters: This is a set of parameters for regime classification, please refer to the comment in lines for detailed description.
-4. regime_number: This is the number of regimes.
-5. length_limit: This is the minimum length of a consecutive time-series of same regime. 
-
-## Usage
-
-It is recommended to run through the example.ipynb notebook to visualize the labeling process. This will also give hints on
+## Examples
+### Use Market Dynamics Model to prepare evaluation datasets
+It is recommended to run through the trademaster/evaluation/market_dynamics_labeling/example.ipynb notebook to visualize the labeling process. This will also give hints on
 deciding the parameters for your dataset. The example.html contains the visualization results from example.ipynb.
 
 An example of labeling the data
 <br />
    ```
-   python tools/MarketRegimeLabeling/linear_model.py --data_path data/algorithmic_trading/BTC/test.csv --method linear --fitting_parameters 2/7 2/14 4 --labeling_parameters -0.5 0.5
+   python tools/MarketRegimeLabeling/Label.py --data_path data/algorithmic_trading/BTC/test.csv --method linear --fitting_parameters 2/7 2/14 4 --labeling_parameters -0.5 0.5
    ```
 
 DJ30
     
-    python tools/MarketRegimeLabeling/linear_model.py --data_path data/portfolio_management/dj30/test.csv --method linear --fitting_parameters 2/7 2/14 4 --labeling_parameters -0.25 0.25 --regime_number 3 --length_limit 24
+    python tools/MarketRegimeLabeling/Label.py --data_path data/portfolio_management/dj30/test.csv --method linear --fitting_parameters 2/7 2/14 4 --labeling_parameters -0.25 0.25 --regime_number 3 --length_limit 24
     
 for DJ30 applied in PM use-case, we would like to define the market regime based on DJ30 index. We have provided an example of
 test_labeled_3_24.csv which is DJI_labeled_3_24.csv and test.csv merged on 'date' where  DJI_labeled_3_24.csv is got from running 
 
 DJI index
    ```
-   python tools/MarketRegimeLabeling/linear_model.py --data_path  data/portfolio_management/dj30/DJI.csv --method linear --fitting_parameters 2/7 2/14 4 --labeling_parameters -0.25 0.25  --regime_number 3 --length_limit 24  --PM data/portfolio_management/dj30/test.csv
+   python tools/MarketRegimeLabeling/Label.py --data_path  data/portfolio_management/dj30/DJI.csv --method linear --fitting_parameters 2/7 2/14 4 --labeling_parameters -0.25 0.25  --regime_number 3 --length_limit 24  --PM data/portfolio_management/dj30/test.csv
    ```
 
 BTC & PD_BTC
 
-    python tools/MarketRegimeLabeling/linear_model.py --data_path data/algorithmic_trading/BTC/test.csv --method linear --fitting_parameters 2/7 2/14 4 --labeling_parameters -0.15 0.15 --regime_number 3 --length_limit 24
+    python tools/MarketRegimeLabeling/Label.py --data_path data/algorithmic_trading/BTC/test.csv --method linear --fitting_parameters 2/7 2/14 4 --labeling_parameters -0.15 0.15 --regime_number 3 --length_limit 24
 
-    python tools/MarketRegimeLabeling/linear_model.py --data_path data/order_execution/PD_BTC/test.csv --method linear --fitting_parameters 2/7 2/14 4 --labeling_parameters -0.15 0.15 --regime_number 3 --length_limit 24
+    python tools/MarketRegimeLabeling/Label.py --data_path data/order_execution/PD_BTC/test.csv --method linear --fitting_parameters 2/7 2/14 4 --labeling_parameters -0.15 0.15 --regime_number 3 --length_limit 24
 
 OE_BTC
 
-    python tools/MarketRegimeLabeling/linear_model.py --data_path data/order_execution/BTC/test.csv --method linear --fitting_parameters 2/7 2/14 4 --labeling_parameters -0.01 0.01 --regime_number 3 --length_limit 32 --OE_BTC True
+    python tools/MarketRegimeLabeling/Label.py --data_path data/order_execution/BTC/test.csv --method linear --fitting_parameters 2/7 2/14 4 --labeling_parameters -0.01 0.01 --regime_number 3 --length_limit 32 --OE_BTC True
 
 Exchange
 
-     python tools/MarketRegimeLabeling/linear_model.py --data_path data/portfolio_management/exchange/test.csv --method linear --fitting_parameters 2/7 2/14 4 --labeling_parameters -0.05 0.05 --regime_number 3 --length_limit 24
+     python tools/MarketRegimeLabeling/Label.py --data_path data/portfolio_management/exchange/test.csv --method linear --fitting_parameters 2/7 2/14 4 --labeling_parameters -0.05 0.05 --regime_number 3 --length_limit 24
 
 
 <br />
-You may read the comments labeling_util.py to get a hint on how to set the parameters
+
 
 The script will take in a data file and output the file with a market regime label column. Besides the market label, we also provide a stock group label column based on DWT clustering.
 
-## Testing agent under a specific market regime
-
-Please prepare test data with the instruction in Usage and run agent with additional args, for example
-
+### Testing agent under a specific market dynamic
 ```
- python tools/algorithmic_trading/train.py --task_name style_test --test_style 0
+ python tools/algorithmic_trading/train.py --task_name dynamics_test --test_dynamic 0
 ```

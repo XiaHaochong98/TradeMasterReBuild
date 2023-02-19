@@ -23,7 +23,7 @@ class AlgorithmicTradingEnvironment(Environments):
 
         self.dataset = get_attr(kwargs, "dataset", None)
         self.task = get_attr(kwargs, "task", "train")
-        self.test_style=int(get_attr(kwargs, "test_style", "-1"))
+        self.test_dynamic=int(get_attr(kwargs, "test_dynamic", "-1"))
         self.task_index = int(get_attr(kwargs, "task_index", "-1"))
 
         self.df_path = None
@@ -42,9 +42,9 @@ class AlgorithmicTradingEnvironment(Environments):
         self.max_volume = get_attr(self.dataset, "max_volume", 1)
         self.future_weights = get_attr(self.dataset, "future_weights", 0.2)
 
-        if self.task.startswith("test_style"):
-            style_test_path = get_attr(kwargs, "style_test_path", None)
-            self.df = pd.read_csv(style_test_path, index_col=0)
+        if self.task.startswith("test_dynamic"):
+            dynamics_test_path = get_attr(kwargs, "dynamics_test_path", None)
+            self.df = pd.read_csv(dynamics_test_path, index_col=0)
         else:
             self.df = pd.read_csv(self.df_path, index_col=0)
 
@@ -156,7 +156,7 @@ class AlgorithmicTradingEnvironment(Environments):
                     "total_assets": assets
                 }
             )
-            metric_save_path=osp.join(osp.dirname(self.df_path),'metric_'+str(self.task)+'_'+str(self.test_style)+'_'+str(self.test_id)+'_'+str(self.task_index)+'.pickle')
+            metric_save_path=osp.join(osp.dirname(self.df_path),'metric_'+str(self.task)+'_'+str(self.test_dynamic)+'_'+str(self.test_id)+'_'+str(self.task_index)+'.pickle')
             with open(metric_save_path, 'wb') as handle:
                 pickle.dump(save_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
             print('metric result saved to '+metric_save_path)
