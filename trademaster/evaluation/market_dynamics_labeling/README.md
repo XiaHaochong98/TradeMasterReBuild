@@ -4,7 +4,7 @@
 The evaluation toolbox provides a sandbox for user to evaluate their policy under different scenarios . 
 The toolbox shows visualizations and reports to assist user compare policies across market dynamic.
 
-## Market Dynamics modeling
+## Market Dynamics Modeling
 The Market Dynamics modeling is a module to label raw data with dynamics that is interpretable. 
 The dynamics are used as meta-information. For example, in the evaluation process, user can run evaluation on specific dynamics.
 
@@ -95,3 +95,5 @@ The script will take in a data file and output the file with a market regime lab
 ```
  python tools/algorithmic_trading/train.py --task_name dynamics_test --test_dynamic 0
 ```
+
+
