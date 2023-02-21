@@ -24,11 +24,12 @@ import base64
 
 tz = pytz.timezone('Asia/Shanghai')
 
-root = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, root)
 
 ROOT = str(pathlib.Path(__file__).resolve().parents[1])
+print(ROOT)
 sys.path.append(ROOT)
+sys.path.insert(0, ROOT)
+
 
 app = Flask(__name__)
 CORS(app, resources={r"/TradeMaster/*": {"origins": "*"}})
