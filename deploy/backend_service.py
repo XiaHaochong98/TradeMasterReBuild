@@ -364,7 +364,7 @@ class Server():
 
     def start_market_dynamics_labeling(self, request):
         # request_json = json.loads(request.get_data(as_text=True))
-        try:
+        # try:
             # # market_dynamics_labeling parameters
             # args={}
             # args['dataset_name'] = request_json.get("dynamics_test_dataset_name").split(":")[-1]
@@ -476,7 +476,7 @@ class Server():
 
     def save_market_dynamics_labeling(self, request):
         # request_json = json.loads(request.get_data(as_text=True))
-        try:
+        # try:
             # same as agent training
             # task_name = request_json.get("task_name")
             # dataset_name = request_json.get("dataset_name").split(":")[-1]
@@ -535,7 +535,7 @@ class Server():
 
     def run_dynamics_test(self, request):
         # request_json = json.loads(request.get_data(as_text=True))
-        try:
+        # try:
             #
             # dynamics_test_label = request_json.get("dynamics_test_label")
             # # same as agent training
