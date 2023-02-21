@@ -2,7 +2,6 @@ import labeling_util as util
 import argparse
 import pandas as pd
 import os
-from argparse import Namespace
 from custom import Market_dynamics_model
 from builder import Market_Dynamics_Model
 from trademaster.utils import get_attr

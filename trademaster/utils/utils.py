@@ -12,6 +12,7 @@ import plotly.graph_objects as go
 import os.path as osp
 import pickle
 from scipy.stats import norm
+from argparse import Namespace
 def print_metrics(stats):
     table = prettytable.PrettyTable()
     for key, value in stats.items():
