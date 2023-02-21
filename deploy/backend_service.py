@@ -424,8 +424,12 @@ class Server():
             cfg.trainer.work_dir = cfg.work_dir
 
             #prepare data
-            test_start_date = request_json.get("dynamics_test_start_date")
-            test_end_date = request_json.get("dynamics_test_end_date")
+            #TODO
+            # test_start_date = request_json.get("dynamics_test_start_date")
+            # test_end_date = request_json.get("dynamics_test_end_date")
+
+            test_start_date = "2010-01-01"
+            test_end_date = "2015-01-01"
 
             data = pd.read_csv(os.path.join(ROOT, cfg.data.data_path, "data.csv"), index_col=0)
             data = data[(data["date"] >= test_start_date) & (data["date"] < test_end_date)]
