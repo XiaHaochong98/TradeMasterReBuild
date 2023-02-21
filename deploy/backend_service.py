@@ -655,17 +655,17 @@ def test_status():
     return res
 
 @app.route("/api/TradeMaster/start_market_dynamics_labeling", methods=["POST"])
-def dynamics_test():
+def start_market_dynamics_labeling():
     res = SERVER.start_market_dynamics_labeling(request)
     return res
 
 @app.route("/api/TradeMaster/save_market_dynamics_labeling", methods=["POST"])
-def dynamics_test():
+def save_market_dynamics_labeling():
     res = SERVER.save_market_dynamics_labeling(request)
     return res
 
 @app.route("/api/TradeMaster/run_dynamics_test", methods=["POST"])
-def dynamics_test():
+def run_dynamics_test():
     res = SERVER.run_dynamics_test(request)
     return res
 
