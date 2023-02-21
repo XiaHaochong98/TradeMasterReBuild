@@ -1,3 +1,5 @@
+ROOT = str(Path(__file__).resolve().parents[2])
+sys.path.append(ROOT)
 import labeling_util as util
 import argparse
 import pandas as pd
