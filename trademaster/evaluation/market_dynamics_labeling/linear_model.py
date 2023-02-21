@@ -8,8 +8,8 @@ import trademaster.evaluation.market_dynamics_labeling.labeling_util as util
 import argparse
 import pandas as pd
 import os
-from custom import Market_dynamics_model
-from builder import Market_Dynamics_Model
+from trademaster.evaluation.market_dynamics_labeling import Market_dynamics_model
+from trademaster.evaluation.market_dynamics_labeling import Market_Dynamics_Model
 from trademaster.utils import get_attr
 
 @Market_Dynamics_Model.register_module()
