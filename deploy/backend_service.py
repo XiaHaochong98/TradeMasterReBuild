@@ -29,7 +29,7 @@ ROOT = str(pathlib.Path(__file__).resolve().parents[1])
 sys.path.append(ROOT)
 #TODO
 sys.path.insert(0,"/home/hcxia/TradeMasterReBuildnew/TradeMasterReBuild/")
-
+sys.path.insert(0,"/home/hcxia/TradeMasterReBuildnew/TradeMasterReBuild/trademaster/")
 
 app = Flask(__name__)
 CORS(app, resources={r"/TradeMaster/*": {"origins": "*"}})
