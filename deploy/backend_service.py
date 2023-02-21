@@ -685,7 +685,7 @@ if __name__ == "__main__":
     # port = 8080
     # app.run(host, port)
     dictionary = {
-        "task_name" : "dynamics_test",
+        "task_name" : "algorithmic_trading",
         "dataset_name" : "algorithmic_trading:BTC".split(":")[-1],
         "optimizer_name" : "adam",
         "loss_name" : "mse",
