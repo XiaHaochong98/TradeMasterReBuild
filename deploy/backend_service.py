@@ -451,7 +451,7 @@ class Server():
                 "market_dynamic_labeling_visulization": str(encoded_string,'utf-8')
             }
             logger.info(info)
-            return jsonify(res)
+            # return jsonify(res)
 
         except Exception as e:
             error_code = 1
@@ -462,7 +462,7 @@ class Server():
                 "market_dynamic_labeling_visulization": ""
             }
             logger.info(info)
-            return jsonify(res)
+            # return jsonify(res)
 
     def save_market_dynamics_labeling(self, request):
         # request_json = json.loads(request.get_data(as_text=True))
@@ -510,7 +510,7 @@ class Server():
                 "info": info
             }
             logger.info(info)
-            return jsonify(res)
+            # return jsonify(res)
 
         except Exception as e:
             error_code = 1
@@ -520,7 +520,7 @@ class Server():
                 "info": info
             }
             logger.info(info)
-            return jsonify(res)
+            # return jsonify(res)
 
 
     def run_dynamics_test(self, request):
@@ -585,7 +585,7 @@ class Server():
                 'radar_plot':str(encoded_string,'utf-8')
             }
             logger.info(info)
-            return jsonify(res)
+            # return jsonify(res)
 
         except Exception as e:
             error_code = 1
@@ -597,7 +597,7 @@ class Server():
                 'radar_plot':""
             }
             logger.info(info)
-            return jsonify(res)
+            # return jsonify(res)
 
 
 class HealthCheck():
