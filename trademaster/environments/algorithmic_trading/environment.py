@@ -25,7 +25,7 @@ class AlgorithmicTradingEnvironment(Environments):
         self.task = get_attr(kwargs, "task", "train")
         self.test_dynamic=int(get_attr(kwargs, "test_dynamic", "-1"))
         self.task_index = int(get_attr(kwargs, "task_index", "-1"))
-        self.word_dir=int(get_attr(kwargs, "word_dir", ""))
+        self.word_dir=get_attr(kwargs, "word_dir", "")
 
         self.df_path = None
         if self.task.startswith("train"):
