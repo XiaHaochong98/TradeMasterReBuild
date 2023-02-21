@@ -132,7 +132,6 @@ def test_dqn():
         plot_radar_chart(test_metrics_scores_dict,'radar_plot_agent_'+str(test_dynamic)+'.png',radar_plot_path)
         print('win rate is: ', sum(r > 0 for r in daily_return_list) / len(daily_return_list))
         print('blind_bid win rate is: ', sum(r > 0 for r in daily_return_list_Blind_Bid) / len(daily_return_list_Blind_Bid))
-        print('blind_bid win rate is: ', sum(r > 0 for r in daily_return_list_Do_Nothing) / len(daily_return_list_Do_Nothing))
         print("style test end")
 
 
