@@ -463,15 +463,15 @@ class Server():
             logger.info(info)
             # return jsonify(res)
 
-        except Exception as e:
-            error_code = 1
-            info = "request data error, {}".format(e)
-            res = {
-                "error_code": error_code,
-                "info": info,
-                "market_dynamic_labeling_visulization": ""
-            }
-            logger.info(info)
+        # except Exception as e:
+        #     error_code = 1
+        #     info = "request data error, {}".format(e)
+        #     res = {
+        #         "error_code": error_code,
+        #         "info": info,
+        #         "market_dynamic_labeling_visulization": ""
+        #     }
+        #     logger.info(info)
             # return jsonify(res)
 
     def save_market_dynamics_labeling(self, request):
@@ -522,14 +522,14 @@ class Server():
             logger.info(info)
             # return jsonify(res)
 
-        except Exception as e:
-            error_code = 1
-            info = "request data error, {}".format(e)
-            res = {
-                "error_code": error_code,
-                "info": info
-            }
-            logger.info(info)
+        # except Exception as e:
+        #     error_code = 1
+        #     info = "request data error, {}".format(e)
+        #     res = {
+        #         "error_code": error_code,
+        #         "info": info
+        #     }
+        #     logger.info(info)
             # return jsonify(res)
 
 
@@ -597,16 +597,16 @@ class Server():
             logger.info(info)
             # return jsonify(res)
 
-        except Exception as e:
-            error_code = 1
-            info = "request data error, {}".format(e)
-            res = {
-                "error_code": error_code,
-                "info": info,
-                "session_id": "",
-                'radar_plot':""
-            }
-            logger.info(info)
+        # except Exception as e:
+        #     error_code = 1
+        #     info = "request data error, {}".format(e)
+        #     res = {
+        #         "error_code": error_code,
+        #         "info": info,
+        #         "session_id": "",
+        #         'radar_plot':""
+        #     }
+        #     logger.info(info)
             # return jsonify(res)
 
 
