@@ -247,7 +247,7 @@ class Server():
                 "session_id": session_id
             }
             logger.info(info)
-            return jsonify(res)
+            # return jsonify(res)
 
         except Exception as e:
             error_code = 1
@@ -257,7 +257,7 @@ class Server():
                 "info": info,
                 "session_id": ""
             }
-            return jsonify(res)
+            # return jsonify(res)
 
     def train_status(self, request):
         request_json = json.loads(request.get_data(as_text=True))
