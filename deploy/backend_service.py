@@ -354,7 +354,7 @@ class Server():
         try:
             # market_dynamics_labeling parameters
             args={}
-            args['dataset_name'] = request_json.get("dynamics_test_dataset_name")
+            args['dataset_name'] = request_json.get("dynamics_test_dataset_name").split(":")[-1]
             args['number_of_market_dynamics'] = request_json.get("number_of_market_style")
             if args['number_of_market_dynamics'] not in [3,4]:
                 raise Exception('only support dynamics number of 3 or 4 for now')
@@ -370,6 +370,34 @@ class Server():
             loss_name = request_json.get("loss_name")
             agent_name = request_json.get("agent_name").split(":")[-1]
             session_id= request_json.get("session_id")
+
+
+
+
+
+
+            # example input
+            args['dataset_name'] = "algorithmic_trading:BTC".split(":")[-1]
+            args['number_of_market_dynamics'] = "3"
+            if args['number_of_market_dynamics'] not in [3,4]:
+                raise Exception('only support dynamics number of 3 or 4 for now')
+            args['minimun_length'] = '24'
+            args['Granularity'] = '0.5'
+            args['bear_threshold'] = '-0.25'
+            args['bull_threshold'] = '0.25'
+            args['task_name']="dynamics_test"
+
+
+
+            task_name = "dynamics_test"
+            dataset_name = "algorithmic_trading:BTC".split(":")[-1]
+            optimizer_name = "adam"
+            loss_name ="mse"
+            agent_name = "algorithmic_trading:dqn".split(":")[-1]
+            session_id = "b5bcd0b6-7a10-11ea-8367-181 dea4d9837"
+
+
+
             work_dir = os.path.join(ROOT, "work_dir", session_id,
                                     f"{task_name}_{dataset_name}_{agent_name}_{agent_name}_{optimizer_name}_{loss_name}")
 
@@ -439,6 +467,22 @@ class Server():
             loss_name = request_json.get("loss_name")
             agent_name = request_json.get("agent_name").split(":")[-1]
             session_id = request_json.get("session_id")
+
+
+            # example input
+            task_name = "dynamics_test"
+            dataset_name = "algorithmic_trading:BTC".split(":")[-1]
+            optimizer_name = "adam"
+            loss_name ="mse"
+            agent_name = "algorithmic_trading:dqn".split(":")[-1]
+            session_id = "b5bcd0b6-7a10-11ea-8367-181 dea4d9837"
+
+
+
+
+
+
+
             work_dir = os.path.join(ROOT, "work_dir", session_id,
                                     f"{task_name}_{dataset_name}_{agent_name}_{agent_name}_{optimizer_name}_{loss_name}")
             with open(os.path.join(work_dir,'dynamics_test_data_path.pickle') , 'wb') as f:
@@ -484,6 +528,20 @@ class Server():
             loss_name = request_json.get("loss_name")
             agent_name = request_json.get("agent_name").split(":")[-1]
             session_id = request_json.get("session_id")
+
+
+            # example input
+            dynamics_test_label = "0"
+            task_name = "dynamics_test"
+            dataset_name = "algorithmic_trading:BTC".split(":")[-1]
+            optimizer_name = "adam"
+            loss_name ="mse"
+            agent_name = "algorithmic_trading:dqn".split(":")[-1]
+            session_id = "b5bcd0b6-7a10-11ea-8367-181 dea4d9837"
+
+
+
+
             work_dir = os.path.join(ROOT, "work_dir", session_id,
                                     f"{task_name}_{dataset_name}_{agent_name}_{agent_name}_{optimizer_name}_{loss_name}")
 

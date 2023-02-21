@@ -223,6 +223,7 @@ class Server():
 
 
 
+
             #fake respone message
             with open('Market_dynmacis_labeling.png',
                       "rb") as image_file:
@@ -262,6 +263,7 @@ class Server():
             session_id = request_json.get("session_id")
 
 
+
             error_code = 0
             info = "request success, save market dynamics"
             res = {
@@ -294,6 +296,9 @@ class Server():
             loss_name = request_json.get("loss_name")
             agent_name = request_json.get("agent_name").split(":")[-1]
             session_id = request_json.get("session_id")
+
+
+
 
             with open('Radar_plot.png', "rb") as image_file:
                 encoded_string = base64.b64encode(image_file.read())
