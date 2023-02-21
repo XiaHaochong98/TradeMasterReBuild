@@ -359,24 +359,24 @@ class Server():
     def start_market_dynamics_labeling(self, request):
         request_json = json.loads(request.get_data(as_text=True))
         try:
-            # market_dynamics_labeling parameters
-            args={}
-            args['dataset_name'] = request_json.get("dynamics_test_dataset_name").split(":")[-1]
-            args['number_of_market_dynamics'] = request_json.get("number_of_market_style")
-            if args['number_of_market_dynamics'] not in [3,4]:
-                raise Exception('only support dynamics number of 3 or 4 for now')
-            args['minimun_length'] = request_json.get("minimun_length")
-            args['Granularity'] = request_json.get("Granularity")
-            args['bear_threshold'] = request_json.get("bear_threshold")
-            args['bull_threshold'] = request_json.get("bull_threshold")
-            args['task_name']=request_json.get("task_name")
-            # agent training parameters
-            task_name = request_json.get("task_name")
-            dataset_name = request_json.get("dataset_name").split(":")[-1]
-            optimizer_name = request_json.get("optimizer_name")
-            loss_name = request_json.get("loss_name")
-            agent_name = request_json.get("agent_name").split(":")[-1]
-            session_id= request_json.get("session_id")
+            # # market_dynamics_labeling parameters
+            # args={}
+            # args['dataset_name'] = request_json.get("dynamics_test_dataset_name").split(":")[-1]
+            # args['number_of_market_dynamics'] = request_json.get("number_of_market_style")
+            # if args['number_of_market_dynamics'] not in [3,4]:
+            #     raise Exception('only support dynamics number of 3 or 4 for now')
+            # args['minimun_length'] = request_json.get("minimun_length")
+            # args['Granularity'] = request_json.get("Granularity")
+            # args['bear_threshold'] = request_json.get("bear_threshold")
+            # args['bull_threshold'] = request_json.get("bull_threshold")
+            # args['task_name']=request_json.get("task_name")
+            # # agent training parameters
+            # task_name = request_json.get("task_name")
+            # dataset_name = request_json.get("dataset_name").split(":")[-1]
+            # optimizer_name = request_json.get("optimizer_name")
+            # loss_name = request_json.get("loss_name")
+            # agent_name = request_json.get("agent_name").split(":")[-1]
+            # session_id= request_json.get("session_id")
 
 
 
@@ -468,12 +468,12 @@ class Server():
         request_json = json.loads(request.get_data(as_text=True))
         try:
             # same as agent training
-            task_name = request_json.get("task_name")
-            dataset_name = request_json.get("dataset_name").split(":")[-1]
-            optimizer_name = request_json.get("optimizer_name")
-            loss_name = request_json.get("loss_name")
-            agent_name = request_json.get("agent_name").split(":")[-1]
-            session_id = request_json.get("session_id")
+            # task_name = request_json.get("task_name")
+            # dataset_name = request_json.get("dataset_name").split(":")[-1]
+            # optimizer_name = request_json.get("optimizer_name")
+            # loss_name = request_json.get("loss_name")
+            # agent_name = request_json.get("agent_name").split(":")[-1]
+            # session_id = request_json.get("session_id")
 
 
             # example input
@@ -527,14 +527,14 @@ class Server():
         request_json = json.loads(request.get_data(as_text=True))
         try:
             #
-            dynamics_test_label = request_json.get("dynamics_test_label")
-            # same as agent training
-            task_name = request_json.get("task_name")
-            dataset_name = request_json.get("dataset_name").split(":")[-1]
-            optimizer_name = request_json.get("optimizer_name")
-            loss_name = request_json.get("loss_name")
-            agent_name = request_json.get("agent_name").split(":")[-1]
-            session_id = request_json.get("session_id")
+            # dynamics_test_label = request_json.get("dynamics_test_label")
+            # # same as agent training
+            # task_name = request_json.get("task_name")
+            # dataset_name = request_json.get("dataset_name").split(":")[-1]
+            # optimizer_name = request_json.get("optimizer_name")
+            # loss_name = request_json.get("loss_name")
+            # agent_name = request_json.get("agent_name").split(":")[-1]
+            # session_id = request_json.get("session_id")
 
 
             # example input
@@ -682,6 +682,6 @@ if __name__ == "__main__":
     # port = 8080
     # app.run(host, port)
     Server=Server()
-    Server.start_market_dynamics_labeling()
-    Server.save_market_dynamics_labeling()
-    Server.run_dynamics_test()
+    Server.start_market_dynamics_labeling(None)
+    Server.save_market_dynamics_labeling(None)
+    Server.run_dynamics_test(None)
