@@ -253,6 +253,7 @@ class Server():
         except Exception as e:
             error_code = 1
             info = "request data error, {}".format(e)
+            print(info)
             res = {
                 "error_code": error_code,
                 "info": info,
