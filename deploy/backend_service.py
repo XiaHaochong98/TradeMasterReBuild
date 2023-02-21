@@ -678,9 +678,9 @@ def health_check():
 
 
 if __name__ == "__main__":
-    # host = "0.0.0.0"
-    # port = 8080
-    # app.run(host, port)
+    host = "0.0.0.0"
+    port = 8080
+    app.run(host, port)
     start_market_dynamics_labeling()
     save_market_dynamics_labeling()
     run_dynamics_test()
