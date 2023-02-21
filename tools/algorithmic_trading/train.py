@@ -33,7 +33,7 @@ def parse_args():
 
 def test_dqn():
     args = parse_args()
-
+    print(args.config)
     cfg = Config.fromfile(args.config)
     task_name = args.task_name
     test_dynamic=args.test_dynamic
