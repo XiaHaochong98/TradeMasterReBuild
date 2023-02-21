@@ -1,4 +1,4 @@
-from .linear_model import main
-from .linear_model import MRL_F2B_args_converter
+from trademaster.evaluation.market_dynamics_labeling.model.linear_model import main
+from trademaster.evaluation.market_dynamics_labeling.model.linear_model import MRL_F2B_args_converter
 from .custom import Market_dynamics_model
 from .builder import build_market_dynamics_model

@@ -2,13 +2,12 @@ import os
 import random
 import sys
 from pathlib import Path
-sys.path.append(os.getcwd())
-ROOT = str(Path(__file__).resolve().parents[2])
+ROOT = str(Path(__file__).resolve().parents[3])
 sys.path.append(ROOT)
 import argparse
 import pandas as pd
-from builder import Market_dynamics_model
-from custom import Market_Dynamics_Model
+from ..builder import Market_dynamics_model
+from ..custom import Market_Dynamics_Model
 from trademaster.utils import get_attr, labeling_util as util
 
 
