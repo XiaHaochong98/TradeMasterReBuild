@@ -384,6 +384,7 @@ class Server():
 
 
             # example input
+            args = {}
             args['dataset_name'] = "algorithmic_trading:BTC".split(":")[-1]
             args['number_of_market_dynamics'] = "3"
             if args['number_of_market_dynamics'] not in [3,4]:
