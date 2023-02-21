@@ -363,7 +363,7 @@ class Server():
             # args={}
             # args['dataset_name'] = request_json.get("dynamics_test_dataset_name").split(":")[-1]
             # args['number_of_market_dynamics'] = request_json.get("number_of_market_style")
-            # if args['number_of_market_dynamics'] not in [3,4]:
+            # if int(args['number_of_market_dynamics']) not in [3,4]:
             #     raise Exception('only support dynamics number of 3 or 4 for now')
             # args['minimun_length'] = request_json.get("minimun_length")
             # args['Granularity'] = request_json.get("Granularity")
@@ -387,7 +387,7 @@ class Server():
             args = {}
             args['dataset_name'] = "algorithmic_trading:BTC".split(":")[-1]
             args['number_of_market_dynamics'] = "3"
-            if args['number_of_market_dynamics'] not in [3,4]:
+            if int(args['number_of_market_dynamics']) not in [3,4]:
                 raise Exception('only support dynamics number of 3 or 4 for now')
             args['minimun_length'] = '24'
             args['Granularity'] = '0.5'
