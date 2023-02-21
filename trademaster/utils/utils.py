@@ -380,6 +380,5 @@ def MRL_F2B_args_converter(args):
     else:
         output_args['PM'] = False
 
-    NS = Namespace(output_args)
-    return NS
+    return output_args
 
