@@ -26,9 +26,9 @@ tz = pytz.timezone('Asia/Shanghai')
 
 
 ROOT = str(pathlib.Path(__file__).resolve().parents[1])
-print(ROOT)
 sys.path.append(ROOT)
-sys.path.insert(0, ROOT)
+#TODO
+sys.path.insert("/home/hcxia/TradeMasterReBuildnew/TradeMasterReBuild/")
 
 
 app = Flask(__name__)
