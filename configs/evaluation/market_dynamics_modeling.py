@@ -7,6 +7,7 @@ _base_ = [
 ]
 
 market_dynamics_model = dict(
+    type='Linear_Market_Dynamics_Model',
     data_path="data/algorithmic_trading/BTC/test.csv",
 fitting_parameters=['2/7','2/14','4'],
 labeling_parameters=[-0.15,0.15],
