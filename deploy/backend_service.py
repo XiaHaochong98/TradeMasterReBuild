@@ -166,6 +166,7 @@ class Server():
         return jsonify(param)
 
     def train(self, request):
+        ##TODO
         # request_json = json.loads(request.get_data(as_text=True))
         request_json = json.loads(request)
         try:
@@ -176,7 +177,9 @@ class Server():
             agent_name = request_json.get("agent_name").split(":")[-1]
             start_date = request_json.get("start_date")
             end_date = request_json.get("end_date")
-            session_id = str(uuid.uuid1())
+            #TODO
+            # session_id = str(uuid.uuid1())
+            session_id = request_json.get("session_id")
 
             cfg_path = os.path.join(ROOT, "configs", task_name,
                                     f"{task_name}_{dataset_name}_{agent_name}_{agent_name}_{optimizer_name}_{loss_name}.py")
