@@ -25,7 +25,7 @@ class AlgorithmicTradingEnvironment(Environments):
         self.task = get_attr(kwargs, "task", "train")
         self.test_dynamic=int(get_attr(kwargs, "test_dynamic", "-1"))
         self.task_index = int(get_attr(kwargs, "task_index", "-1"))
-        self.word_dir=get_attr(kwargs, "word_dir", "")
+        self.work_dir=get_attr(kwargs, "work_dir", "")
 
         self.df_path = None
         if self.task.startswith("train"):
@@ -157,7 +157,7 @@ class AlgorithmicTradingEnvironment(Environments):
                     "total_assets": assets
                 }
             )
-            metric_save_path=osp.join(self.word_dir,'metric_'+str(self.task)+'_'+str(self.test_dynamic)+'_'+str(self.test_id)+'_'+str(self.task_index)+'.pickle')
+            metric_save_path=osp.join(self.work_dir,'metric_'+str(self.task)+'_'+str(self.test_dynamic)+'_'+str(self.test_id)+'_'+str(self.task_index)+'.pickle')
             with open(metric_save_path, 'wb') as handle:
                 pickle.dump(save_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
             print('metric result saved to '+metric_save_path)
