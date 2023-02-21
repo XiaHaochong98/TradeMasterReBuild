@@ -682,7 +682,18 @@ if __name__ == "__main__":
     # host = "0.0.0.0"
     # port = 8080
     # app.run(host, port)
+    dictionary = {
+        "task_name" : "dynamics_test",
+        "dataset_name" : "algorithmic_trading:BTC".split(":")[-1],
+        "optimizer_name" : "adam",
+        "loss_name" : "mse",
+        "agent_name" : "algorithmic_trading:dqn".split(":")[-1],
+        "session_id" : "b5bcd0b6-7a10-11ea-8367-181 dea4d9837"
+    }
+    # Serializing json
+    json_object = json.dumps(dictionary, indent=4)
     Server=Server()
+    Server.train(json_object)
     Server.start_market_dynamics_labeling(None)
     Server.save_market_dynamics_labeling(None)
     Server.run_dynamics_test(None)
