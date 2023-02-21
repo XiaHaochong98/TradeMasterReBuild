@@ -109,29 +109,7 @@ def main(args):
         os.remove('./temp/OE_BTC_processed.csv')
     return process_datafile_path,market_dynamic_labeling_visulization_paths
 
-def MRL_F2B_args_converter(args):
-    #TODO:
-    output_args={}
-    output_args['data_path']=args['dataset_path']
-    output_args['method']='linear'
-    #convert Granularity to fitting_parameters
-    # Granularity=0-> base=5 Granularity=1-> base=25
-    G=args['Granularity']
-    output_args['fitting_parameters']=[str(2/(20*G+5)),str(1/(20*G+5)),'4']#"2/7 2/14 4"
-    output_args['labeling_parameters']=[args['bear_threshold'],args['bull_threshold']]
-    output_args['regime_number']=args['number_of_market_dynamics']
-    output_args['length_limit']=args['minimun_length']
-    if args['dataset_name']=='order_excecution:BTC':
-        output_args['OE_BTC']=True
-    else:
-        output_args['OE_BTC'] =False
-    if args['task_name']=='portfolio_management':
-        output_args['PM'] = True
-    else:
-        output_args['PM'] = False
 
-    NS = Namespace(output_args)
-    return NS
 
 if __name__=="__main__":
     parser = argparse.ArgumentParser()

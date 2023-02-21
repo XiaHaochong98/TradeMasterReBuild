@@ -19,7 +19,7 @@ sys.path.insert(0,"/home/hcxia/TradeMasterReBuildnew/TradeMasterReBuild/")
 # sys.path.insert(0,"/home/hcxia/TradeMasterReBuildnew/TradeMasterReBuild/trademaster/")
 
 
-from trademaster.utils import replace_cfg_vals
+from trademaster.utils import replace_cfg_vals,MRL_F2B_args_converter
 from flask_cors import CORS
 import os.path as osp
 import pickle
@@ -166,7 +166,8 @@ class Server():
         return jsonify(param)
 
     def train(self, request):
-        request_json = json.loads(request.get_data(as_text=True))
+        # request_json = json.loads(request.get_data(as_text=True))
+        request_json = json.loads(request)
         try:
             task_name = request_json.get("task_name")
             dataset_name = request_json.get("dataset_name").split(":")[-1]
@@ -427,9 +428,8 @@ class Server():
             data.to_csv(data_path)
             args['dataset_path']=data_path
 
-
             #front-end args to back-end args
-            args=market_dynamics_labeling.MRL_F2B_args_converter(args)
+            args=MRL_F2B_args_converter(args)
 
             #run market_dynamics_labeling
             process_datafile_path,market_dynamic_labeling_visualization_paths=market_dynamics_labeling.main(args)
