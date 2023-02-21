@@ -366,7 +366,7 @@ def MRL_F2B_args_converter(args):
     #convert Granularity to fitting_parameters
     # Granularity=0-> base=5 Granularity=1-> base=25
     G=args['Granularity']
-    output_args['fitting_parameters']=[str(2/(20*G+5)),str(1/(20*G+5)),'4']#"2/7 2/14 4"
+    output_args['fitting_parameters']=[str(2/(20*float(G)+5)),str(1/(20*float(G)+5)),'4']#"2/7 2/14 4"
     output_args['labeling_parameters']=[args['bear_threshold'],args['bull_threshold']]
     output_args['regime_number']=args['number_of_market_dynamics']
     output_args['length_limit']=args['minimun_length']
