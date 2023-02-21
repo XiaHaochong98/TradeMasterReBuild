@@ -236,6 +236,7 @@ class Server():
                 train_script_path,
                 cfg_path,
                 log_path)
+            print(cmd)
             executor.submit(run_cmd, cmd)
             logger.info(cmd)
 
