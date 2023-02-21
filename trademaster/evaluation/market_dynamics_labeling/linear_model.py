@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 ROOT = str(Path(__file__).resolve().parents[2])
 sys.path.append(ROOT)
-import labeling_util as util
+import trademaster.evaluation.market_dynamics_labeling.labeling_util as util
 import argparse
 import pandas as pd
 import os
