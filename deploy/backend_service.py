@@ -396,11 +396,11 @@ class Server():
             args['Granularity'] = '0.5'
             args['bear_threshold'] = '-0.25'
             args['bull_threshold'] = '0.25'
-            args['task_name']="dynamics_test"
+            args['task_name']="algorithmic_trading"
 
 
 
-            task_name = "dynamics_test"
+            task_name = "algorithmic_trading"
             dataset_name = "algorithmic_trading:BTC".split(":")[-1]
             optimizer_name = "adam"
             loss_name ="mse"
@@ -480,7 +480,7 @@ class Server():
 
 
             # example input
-            task_name = "dynamics_test"
+            task_name = "algorithmic_trading"
             dataset_name = "algorithmic_trading:BTC".split(":")[-1]
             optimizer_name = "adam"
             loss_name ="mse"
@@ -542,7 +542,7 @@ class Server():
 
             # example input
             dynamics_test_label = "0"
-            task_name = "dynamics_test"
+            task_name = "algorithmic_trading"
             dataset_name = "algorithmic_trading:BTC".split(":")[-1]
             optimizer_name = "adam"
             loss_name ="mse"
