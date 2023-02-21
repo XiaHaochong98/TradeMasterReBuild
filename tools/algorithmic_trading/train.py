@@ -125,6 +125,7 @@ def test_dqn():
             daily_return_list_Blind_Bid.extend(trainer.test_with_customize_policy(Blind_Bid,'Blind_Bid'))
             daily_return_list_Do_Nothing.extend(trainer.test_with_customize_policy(Do_Nothing,'Do_Nothing'))
             metric_path='metric_' + str(trainer.test_environment.task) + '_' + str(trainer.test_environment.test_dynamic)
+        print('cfg.work_dir',cfg.work_dir)
         metrics_sigma_dict,zero_metrics=create_radar_score_baseline(cfg.work_dir,metric_path)
         test_metrics_scores_dict = calculate_radar_score(cfg.work_dir,metric_path,'agent',metrics_sigma_dict,zero_metrics)
         radar_plot_path=cfg.work_dir
