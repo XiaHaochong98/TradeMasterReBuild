@@ -24,7 +24,7 @@ class Linear_Market_Dynamics_Model(Market_dynamics_model):
         self.regime_number = get_attr(kwargs, "regime_number", None)
         self.length_limit = get_attr(kwargs, "length_limit", None)
         self.OE_BTC = get_attr(kwargs, "OE_BTC", None)
-        self.PM = get_attr(kwargs, "PM", None)
+        self.PM = eval(get_attr(kwargs, "PM", 'False'))
 
     def run(self):
         print('labeling start')
@@ -46,7 +46,7 @@ class Linear_Market_Dynamics_Model(Market_dynamics_model):
         merged_data = data.merge(labeled_data, how='left', on=['date', 'tic', 'adjcp'], suffixes=('', '_DROP')).filter(
             regex='^(?!.*_DROP)')
         low, high = self.labeling_parameters
-        if self.PM != 'False':
+        if self.PM != False:
             DJI = merged_data.loc[:, ['date', 'label']]
             test = pd.read_csv(self.PM, index_col=0)
             merged = test.merge(DJI, on='date')
