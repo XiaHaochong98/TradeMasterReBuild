@@ -63,6 +63,7 @@ class Linear_Market_Dynamics_Model(Market_dynamics_model):
         print('plotting start')
         # a list the path to all the modeling visulizations
         market_dynamic_labeling_visualization_paths=Labeler.plot(Labeler.tics, self.labeling_parameters, output_path)
+        print(market_dynamic_labeling_visualization_paths)
         print('plotting done')
         if self.OE_BTC == True:
             os.remove('./temp/OE_BTC_processed.csv')
