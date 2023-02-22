@@ -302,7 +302,10 @@ class Labeler():
                                            style='normal', size=16)
         plt.legend(by_label.values(), by_label.keys(), prop=font)
         ax.set_title(tic + '_linear_regression_regime', fontsize=20)
-        fig_path=folder_name+ tic + '_MDM_linear.png'
+        plot_path=os.path.join(folder_name,'MDM_linear')
+        if not os.path.exists(plot_path):
+            os.makedirs(plot_path)
+        fig_path=plot_path+ tic + '.png'
         fig.savefig(fig_path)
         plt.close(fig)
         return os.path.abspath(fig_path)
@@ -353,6 +356,9 @@ class Labeler():
         by_label = dict(zip(labels, handles))
         plt.legend(by_label.values(), by_label.keys())
         plt.title('TSNE', fontsize=20)
-        fig.savefig(folder_name+'TSNE'+title+'.png')
+        plot_path = os.path.join(folder_name, 'MDM_linear')
+        if not os.path.exists(plot_path):
+            os.makedirs(plot_path)
+        fig.savefig(plot_path+'TSNE'+title+'.png')
         plt.close(fig)
 
