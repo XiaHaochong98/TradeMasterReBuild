@@ -46,24 +46,23 @@ class Linear_Market_Dynamics_Model(Market_dynamics_model):
         merged_data = data.merge(labeled_data, how='left', on=['date', 'tic', 'adjcp'], suffixes=('', '_DROP')).filter(
             regex='^(?!.*_DROP)')
         low, high = self.labeling_parameters
+        self.model_id = str(self.regime_number) + '_' + str(
+            self.length_limit) + '_' + str(low) + '_' + str(high)
         if self.PM :
             DJI = merged_data.loc[:, ['date', 'label']]
             test = pd.read_csv(self.PM, index_col=0)
             merged = test.merge(DJI, on='date')
-            process_datafile_path = os.path.splitext(output_path)[0] + '_label_by_DJIindex_' + str(self.regime_number) + '_' + str(
-                self.length_limit) + '_' + str(low) + '_' + str(high) + '.csv'
+            process_datafile_path = os.path.splitext(output_path)[0] + '_label_by_DJIindex_' + self.model_id + '.csv'
             merged.to_csv(process_datafile_path, index=False)
         else:
-            process_datafile_path = os.path.splitext(output_path)[0] + '_labeled_' + str(self.regime_number) + '_' + str(
-                self.length_limit) + '_' + str(
-                low) + '_' + str(high) + '.csv'
+            process_datafile_path = os.path.splitext(output_path)[0] + '_labeled_' + self.model_id + '.csv'
             merged_data.to_csv(process_datafile_path
                                , index=False)
         print('labeling done')
         print('plotting start')
         # a list the path to all the modeling visulizations
         print(output_path)
-        market_dynamic_labeling_visualization_paths=Labeler.plot(Labeler.tics, self.labeling_parameters, output_path)
+        market_dynamic_labeling_visualization_paths=Labeler.plot(Labeler.tics, self.labeling_parameters, output_path,self.model_id)
         print('plotting done')
         if self.OE_BTC == True:
             os.remove('./temp/OE_BTC_processed.csv')

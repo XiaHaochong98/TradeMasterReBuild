@@ -270,8 +270,8 @@ class Labeler():
             y_pred_list.append(y_pred)
         return np.asarray(coef_list), np.asarray(turning_points), y_pred_list, normalized_coef_list
 
-    def plot(self,tics,parameters,data_path):
-        self.folder_name =os.path.dirname(os.path.realpath(data_path))
+    def plot(self,tics,parameters,data_path,model_id):
+        self.folder_name =os.path.join(os.path.dirname(os.path.realpath(data_path)),model_id)
         if self.method=='linear':
             try:
                 low,high=parameters
@@ -279,7 +279,7 @@ class Labeler():
                 raise Exception("parameters shoud be [low,high] where the series would be split into 4 regimes by low,high and 0 as threshold based on slope. A value of -0.5 and 0.5 stand for -0.5% and 0.5% change per step.")
             for tic in tics:
                 paths=[]
-                paths.append(self.linear_regession_plot(self.data_dict[tic],tic,self.y_pred_dict[tic],self.turning_points_dict[tic],low,high,normalized_coef_list=self.norm_coef_list_dict[tic],folder_name=self.folder_name+'/'))
+                paths.append(self.linear_regession_plot(self.data_dict[tic],tic,self.y_pred_dict[tic],self.turning_points_dict[tic],low,high,normalized_coef_list=self.norm_coef_list_dict[tic],folder_name=self.folder_name))
                 return paths
             try:
               self.TSNE_plot(self.tsne_results,self.all_label_seg,folder_name=self.folder_name)
