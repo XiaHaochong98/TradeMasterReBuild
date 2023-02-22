@@ -5,5 +5,5 @@ labeling_parameters=[-0.15,0.15],
 regime_number=3,
 length_limit=24,
 OE_BTC=False,
-PM=False
+PM=''
 )
