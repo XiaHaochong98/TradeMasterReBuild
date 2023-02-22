@@ -58,6 +58,11 @@ def run_mdm():
     plot_dir = os.path.dirname(os.path.realpath(market_dynamic_labeling_visualization_paths[0]))
     print(f'the visualizations are at {plot_dir}')
 
+    ## wirte path to cfg
+    cfg.market_dynamics_model.process_datafile_path=process_datafile_path
+    cfg.market_dynamics_model.market_dynamic_labeling_visualization_paths=market_dynamic_labeling_visualization_paths
+    cfg.dump(args.config)
+
 
 
 if __name__ == '__main__':

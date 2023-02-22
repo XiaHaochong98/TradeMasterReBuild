@@ -371,14 +371,12 @@ def MRL_F2B_args_converter(args):
     output_args['labeling_parameters']=[args['bear_threshold'],args['bull_threshold']]
     output_args['regime_number']=args['number_of_market_dynamics']
     output_args['length_limit']=args['minimun_length']
+    output_args['PM']=args['PM']
     if args['dataset_name']=='order_excecution:BTC':
         output_args['OE_BTC']=True
     else:
         output_args['OE_BTC'] =False
-    if args['task_name']=='portfolio_management':
-        output_args['PM'] = True
-    else:
-        output_args['PM'] = False
+
 
     return output_args
 
