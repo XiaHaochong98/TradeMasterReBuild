@@ -50,11 +50,11 @@ class Linear_Market_Dynamics_Model(Market_dynamics_model):
             DJI = merged_data.loc[:, ['date', 'label']]
             test = pd.read_csv(self.PM, index_col=0)
             merged = test.merge(DJI, on='date')
-            process_datafile_path = output_path[:-4] + '_label_by_DJIindex_' + str(self.regime_number) + '_' + str(
+            process_datafile_path = os.path.splitext(output_path)[0] + '_label_by_DJIindex_' + str(self.regime_number) + '_' + str(
                 self.length_limit) + '_' + str(low) + '_' + str(high) + '.csv'
             merged.to_csv(process_datafile_path, index=False)
         else:
-            process_datafile_path = output_path[:-4] + '_labeled_' + str(self.regime_number) + '_' + str(
+            process_datafile_path = os.path.splitext(output_path)[0] + '_labeled_' + str(self.regime_number) + '_' + str(
                 self.length_limit) + '_' + str(
                 low) + '_' + str(high) + '.csv'
             merged_data.to_csv(process_datafile_path
