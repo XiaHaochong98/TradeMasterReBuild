@@ -88,7 +88,6 @@ class AlgorithmicTradingEnvironment(Environments):
         # for the information, it should calculate 2 additional things
         self.compound_memory = [[self.initial_amount, 0]]
         self.portfolio_return_memory = [0]
-        self.portfolio_return_memory_buy_and_hold = [0]
         self.transaction_cost_memory = []
         self.terminal = False
         self.portfolio_value = self.initial_amount
@@ -103,13 +102,11 @@ class AlgorithmicTradingEnvironment(Environments):
         self.state = np.array(self.state).reshape(-1).tolist()
         self.state = self.state + self.compound_memory[-1]
         self.state = np.array(self.state)
-        self.first_day_flag=True
 
         self.first_close = self.data.iloc[-1, :].close
         self.actions_length=len(
             self.df.index.unique()) - self.forward_num_day - 1-self.day
-        # print('self.actions_length ',self.actions_length)
-        # self.actions_counter=0
+
 
 
         return self.state
@@ -126,15 +123,13 @@ class AlgorithmicTradingEnvironment(Environments):
             data = self.df.iloc[last_day -
                                 self.backward_num_day:last_day, :]
             last_close = data.iloc[-1, :].close
-            # print('first_close is: ',self.first_close,' last close is: ',last_close)
-            buy_and_hold_profict=100*(last_close-self.first_close)/self.first_close
-            # print('buy and hold profit is: ',buy_and_hold_profict,"%")
+            buy_and_hold_profit=100*(last_close-self.first_close)/self.first_close
 
             stats = OrderedDict(
                 {
                     "Profit Margin": ["{:04f}%".format(tr * 100)],
-                    "Buy and Hold Profit": ["{:04f}%".format(buy_and_hold_profict)],
-                    "Excess Profit": ["{:04f}%".format(tr * 100 - buy_and_hold_profict)],
+                    "Buy and Hold Profit": ["{:04f}%".format(buy_and_hold_profit)],
+                    "Excess Profit": ["{:04f}%".format(tr * 100 - buy_and_hold_profit)],
                     "Sharp Ratio": ["{:04f}".format(sharpe_ratio)],
                     "Volatility": ["{:04f}".format(vol)],
                     "Max Drawdown": ["{:04f}".format(mdd)],
@@ -151,8 +146,8 @@ class AlgorithmicTradingEnvironment(Environments):
             save_dict = OrderedDict(
                 {
                     "Profit Margin": tr * 100,
-                    "Buy and Hold Profit":buy_and_hold_profict,
-                    "Excess Profit": tr * 100-buy_and_hold_profict,
+                    "Buy and Hold Profit":buy_and_hold_profit,
+                    "Excess Profit": tr * 100-buy_and_hold_profit,
                     "daily_return": daily_return,
                     "total_assets": assets
                 }
@@ -226,14 +221,6 @@ class AlgorithmicTradingEnvironment(Environments):
                                                 (new_price - old_price))
             self.portfolio_value = compound[0] + compound[1] * (new_price)
             self.asset_memory.append(self.portfolio_value)
-            # if self.first_day_flag:
-            #     self.buy_and_hold_portfolio_return_memory.append(self.action_dim *
-            #                                                      (new_price - old_price))
-            #     self.buy_and_hold_asset_memory.append()
-            #     self.first_day_flag=False
-            # else:
-            #     self.buy_and_hold_portfolio_return_memory.append(0 *
-            #                                         (new_price - old_price))
             self.future_data = self.df.iloc[self.day - 1:self.day +
                                                          self.forward_num_day, :]
             self.date_memory.append(self.data.date.unique()[-1])
