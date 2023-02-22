@@ -151,7 +151,7 @@ class Labeler():
             self.data_dict[self.tics[i]]['stock_type']=label_stock[i]
         tsne_model = TSNE(n_components=3, perplexity=25, n_iter=300)
         tsne_results = tsne_model.fit_transform(fitting_data_1.reshape(fitting_data_1.shape[0],fitting_data_1.shape[1]))
-        self.TSNE_plot(tsne_results,label_stock,'_stock_cluster',folder_name=self.folder_name)
+        self.TSNE_plot(tsne_results,label_stock,'_stock_cluster',folder_name=self.plot_path)
 
     def plot_ori(self,data, name):
         fig, ax = plt.subplots(1, 1, figsize=(20, 10), constrained_layout=True)
@@ -271,7 +271,9 @@ class Labeler():
         return np.asarray(coef_list), np.asarray(turning_points), y_pred_list, normalized_coef_list
 
     def plot(self,tics,parameters,data_path,model_id):
-        self.folder_name =os.path.join(os.path.dirname(os.path.realpath(data_path)),model_id)
+        self.plot_path =os.path.join(os.path.dirname(os.path.realpath(data_path)),'MDM_linear',model_id)
+        if not os.path.exists(self.plot_path):
+            os.makedirs(self.plot_path)
         if self.method=='linear':
             try:
                 low,high=parameters
@@ -279,10 +281,10 @@ class Labeler():
                 raise Exception("parameters shoud be [low,high] where the series would be split into 4 regimes by low,high and 0 as threshold based on slope. A value of -0.5 and 0.5 stand for -0.5% and 0.5% change per step.")
             for tic in tics:
                 paths=[]
-                paths.append(self.linear_regession_plot(self.data_dict[tic],tic,self.y_pred_dict[tic],self.turning_points_dict[tic],low,high,normalized_coef_list=self.norm_coef_list_dict[tic],folder_name=self.folder_name))
+                paths.append(self.linear_regession_plot(self.data_dict[tic],tic,self.y_pred_dict[tic],self.turning_points_dict[tic],low,high,normalized_coef_list=self.norm_coef_list_dict[tic],folder_name=self.plot_path))
                 return paths
             try:
-              self.TSNE_plot(self.tsne_results,self.all_label_seg,folder_name=self.folder_name)
+              self.TSNE_plot(self.tsne_results,self.all_label_seg,folder_name=self.plot_path)
             except:
               print('not able to plot TSNE')
     def linear_regession_plot(self,data, tic, y_pred_list, turning_points, low, high, normalized_coef_list,folder_name=None):
@@ -302,7 +304,7 @@ class Labeler():
                                            style='normal', size=16)
         plt.legend(by_label.values(), by_label.keys(), prop=font)
         ax.set_title(tic + '_linear_regression_regime', fontsize=20)
-        plot_path=os.path.join(folder_name,'MDM_linear')
+        plot_path=folder_name
         if not os.path.exists(plot_path):
             os.makedirs(plot_path)
         fig_path=plot_path+ tic + '.png'
@@ -356,7 +358,7 @@ class Labeler():
         by_label = dict(zip(labels, handles))
         plt.legend(by_label.values(), by_label.keys())
         plt.title('TSNE', fontsize=20)
-        plot_path = os.path.join(folder_name, 'MDM_linear')
+        plot_path = folder_name
         if not os.path.exists(plot_path):
             os.makedirs(plot_path)
         fig.savefig(plot_path+'TSNE'+title+'.png')
