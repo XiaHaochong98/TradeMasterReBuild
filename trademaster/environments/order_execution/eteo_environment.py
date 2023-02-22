@@ -107,7 +107,6 @@ class OrderExecutionETEOEnvironment(Environments):
         order_left = [self.target_order]
         self.private_state = data_left + order_left
         self.state = np.array(self.public_state + self.private_state)
-        self.first_close = self.data.iloc[-1, :].close
         return self.state
 
     def step(self, action: np.array):
