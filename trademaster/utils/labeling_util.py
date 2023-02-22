@@ -139,7 +139,7 @@ class Labeler():
         fitting_data = to_time_series_dataset(data_by_tic)
         fitting_data_1=to_time_series_dataset(data_by_tic_1)
         km_stock = TimeSeriesKMeans(n_clusters=6, metric="dtw", max_iter=50, max_iter_barycenter=100, n_jobs=50,
-                                    verbose=1).fit(fitting_data)
+                                    verbose=0).fit(fitting_data)
         label_stock = km_stock.predict(fitting_data)
         output = open('DWT_stocks.pkl', 'wb')
         pickle.dump(km_stock, output, -1)
