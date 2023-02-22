@@ -278,7 +278,9 @@ class Labeler():
             except:
                 raise Exception("parameters shoud be [low,high] where the series would be split into 4 regimes by low,high and 0 as threshold based on slope. A value of -0.5 and 0.5 stand for -0.5% and 0.5% change per step.")
             for tic in tics:
-                self.linear_regession_plot(self.data_dict[tic],tic,self.y_pred_dict[tic],self.turning_points_dict[tic],low,high,normalized_coef_list=self.norm_coef_list_dict[tic],folder_name=self.folder_name+'/')
+                paths=[]
+                paths.append(self.linear_regession_plot(self.data_dict[tic],tic,self.y_pred_dict[tic],self.turning_points_dict[tic],low,high,normalized_coef_list=self.norm_coef_list_dict[tic],folder_name=self.folder_name+'/'))
+                return paths
             try:
               self.TSNE_plot(self.tsne_results,self.all_label_seg,folder_name=self.folder_name)
             except:
