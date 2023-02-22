@@ -14,9 +14,9 @@ from trademaster.utils import get_attr, labeling_util as util
 @Market_Dynamics_Model.register_module()
 
 class Linear_Market_Dynamics_Model(Market_dynamics_model):
-    def __int__(self,**kwargs):
+    def __init__(self,**kwargs):
         super(Linear_Market_Dynamics_Model, self).__init__()
-        print('data_path',get_attr(kwargs, "data_path", None))
+        # print('data_path',get_attr(kwargs, "data_path", None))
         self.data_path=get_attr(kwargs, "data_path", None)
         self.method = 'linear'
         self.fitting_parameters = get_attr(kwargs, "fitting_parameters", None)
